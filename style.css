@@ -49,12 +49,9 @@ body, html {
 
 /* طبقة تعتيم زجاجية هادية فوق الصورة */
 .dark-overlay {
-    position: fixed; 
-    top: 0; left: 0; 
-    width: 100vw; height: 100vh;
-    background: rgba(11, 14, 20, 0.65); /* شيلنا التدرج المعقد وخليناها طبقة غامقة خفيفة وشفافة */
-    z-index: -1; 
-    pointer-events: none;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(11, 14, 20, 0.3); /* فتحنا الطبقة الغامقة هنا */
+    z-index: -1; pointer-events: none;
 }
 
 /* شريط التنقل المتناسق بالخط الزجاجي الجديد */
