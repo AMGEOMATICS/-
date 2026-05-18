@@ -268,5 +268,17 @@ window.showPage = (id, el) => { document.querySelectorAll('.page').forEach(p=>p.
 window.toggleTheme = () => { const body = document.body; const logo = document.getElementById('site-logo'); body.classList.toggle('dark-mode'); logo.src = body.classList.contains('dark-mode') ? 'AM (1).png' : 'AM.png'; };
 document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
 window.openModal = (id) => { document.getElementById(id).style.display = 'flex'; };
+
+// دالة زرار Start الذكية
+window.handleStartBtn = () => {
+    if (currentUser) {
+        // لو اليوزر مسجل دخول، هنجيب لينك صفحة "البيانات" من القايمة وننقله عليها
+        const dataNavLink = document.querySelectorAll('.nav-links a')[1]; 
+        showPage('data', dataNavLink);
+    } else {
+        // لو مش مسجل، نفتحله نافذة تسجيل الدخول
+        openModal('login-modal');
+    }
+};
 window.closeModal = (id) => { document.getElementById(id).style.display = 'none'; };
 window.switchAuthTab = (t) => { document.getElementById('login-form').style.display = t==='login'?'flex':'none'; document.getElementById('register-form').style.display = t==='register'?'flex':'none'; document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); };
