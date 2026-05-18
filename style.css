@@ -32,19 +32,29 @@ body, html {
 .lang-ar .en { display: none !important; }
 .lang-en .ar { display: none !important; }
 
-/* تثبيت طبقة خلفية كوكب الأرض بالبلور منعا لأي خلل شاشات */
+/* طبقة خلفية كوكب الأرض بالبلور المطور */
 .earth-bg {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background-image: url('earth.jpg'); background-size: cover; background-position: center;
-    filter: blur(12px); -webkit-filter: blur(12px); /* بلور سينمائي ناعم وعميق */
-    transform: scale(1.05);
-    opacity: 0.28; z-index: -2; pointer-events: none;
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100vw; height: 100vh;
+    background-image: url('earth.jpg'); 
+    background-size: cover; 
+    background-position: center;
+    filter: blur(6px); -webkit-filter: blur(6px); /* قللنا البلور شوية عشان تفاصيل الأرض تبان */
+    transform: scale(1.03);
+    opacity: 0.55; /* زودنا الشفافية عشان الصورة تنور وتظهر غصب عنها */
+    z-index: -2; 
+    pointer-events: none;
 }
 
+/* طبقة تعتيم زجاجية هادية فوق الصورة */
 .dark-overlay {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: radial-gradient(circle at center, transparent 20%, var(--bg-color) 80%);
-    z-index: -1; pointer-events: none;
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100vw; height: 100vh;
+    background: rgba(11, 14, 20, 0.65); /* شيلنا التدرج المعقد وخليناها طبقة غامقة خفيفة وشفافة */
+    z-index: -1; 
+    pointer-events: none;
 }
 
 /* شريط التنقل المتناسق بالخط الزجاجي الجديد */
