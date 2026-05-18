@@ -18,7 +18,6 @@ const db = getFirestore(app);
 const ADMIN_EMAIL = "refathany2005@gmail.com"; 
 let currentUser = null;
 
-// مراقبة الدخول وإخفاء/إظهار زراير النشر
 onAuthStateChanged(auth, (user) => {
     const loginBtn = document.getElementById('login-btn-nav');
     const logoutBtn = document.getElementById('logout-btn-nav');
@@ -69,7 +68,6 @@ window.loginUser = async () => {
 
 window.logoutUser = async () => { await signOut(auth); };
 
-// دوال النشر
 window.saveDataProject = async () => {
     if(!currentUser) return;
     const title = document.getElementById('data-title').value;
@@ -80,7 +78,7 @@ window.saveDataProject = async () => {
 
     await addDoc(collection(db, "projects"), {
         title, format, date, details, link, 
-        publisherName: currentUser.displayName || "مستخدم", 
+        publisherName: currentUser.displayName || "مستخدم مجهول", // هنا حفظ اسم اليوزر في الفايربيز
         publisherEmail: currentUser.email 
     });
     alert("تم النشر!"); closeModal('create-data-modal');
@@ -93,7 +91,7 @@ window.saveCourse = async () => {
     const link = document.getElementById('course-link').value;
 
     await addDoc(collection(db, "courses"), {
-        title, details, link, publisherName: currentUser.displayName || "مستخدم", publisherEmail: currentUser.email
+        title, details, link, publisherName: currentUser.displayName || "مستخدم مجهول", publisherEmail: currentUser.email
     });
     alert("تم النشر!"); closeModal('create-course-modal');
 };
@@ -105,12 +103,11 @@ window.saveSite = async () => {
     const link = document.getElementById('site-link').value;
 
     await addDoc(collection(db, "sites"), {
-        title, details, link, publisherName: currentUser.displayName || "مستخدم", publisherEmail: currentUser.email
+        title, details, link, publisherName: currentUser.displayName || "مستخدم مجهول", publisherEmail: currentUser.email
     });
     alert("تم النشر!"); closeModal('create-site-modal');
 };
 
-// عرض البيانات
 function loadData(collectionName, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -129,7 +126,7 @@ function loadData(collectionName, containerId) {
                 <h3>${data.title}</h3>
                 ${data.format ? `<p><strong>الصيغة:</strong> ${data.format}</p>` : ''}
                 <p>${data.details || ''}</p>
-                <p><small style="color:var(--primary-color);">الناشر: ${data.publisherName}</small></p>
+                <p><small style="color:var(--primary-color); font-weight:bold;">الناشر: ${data.publisherName}</small></p>
                 <a href="${data.link}" target="_blank" style="display:block; margin-top:10px; color:#fff; background:var(--primary-color); text-align:center; padding:8px; border-radius:8px; text-decoration:none;">فتح الرابط</a>
             `;
             container.appendChild(card);
@@ -137,9 +134,8 @@ function loadData(collectionName, containerId) {
     });
 }
 
-window.deleteItem = async (col, id) => { if(confirm("أكيد هتمسح؟")) await deleteDoc(doc(db, col, id)); };
+window.deleteItem = async (col, id) => { if(confirm("أكيد هتمسح البوست ده؟")) await deleteDoc(doc(db, col, id)); };
 
-// --- تعديل محرك البحث (عشان يظهر رسالة لا يوجد محتوى) ---
 window.filterSearch = (inputId, listId) => {
     const input = document.getElementById(inputId).value.toLowerCase();
     const container = document.getElementById(listId);
@@ -149,20 +145,19 @@ window.filterSearch = (inputId, listId) => {
     for (let i = 0; i < cards.length; i++) {
         if (cards[i].innerText.toLowerCase().includes(input)) {
             cards[i].style.display = "block";
-            hasVisibleCards = true; // لقينا داتا
+            hasVisibleCards = true; 
         } else {
             cards[i].style.display = "none";
         }
     }
 
-    // إظهار أو إخفاء رسالة (لا يوجد محتوى)
     let noMsg = document.getElementById('no-msg-' + listId);
     if (!hasVisibleCards) {
         if (!noMsg) {
             noMsg = document.createElement('div');
             noMsg.id = 'no-msg-' + listId;
             noMsg.className = 'glass-panel';
-            noMsg.style.gridColumn = '1 / -1'; // عشان تاخد العرض كله
+            noMsg.style.gridColumn = '1 / -1';
             noMsg.style.textAlign = 'center';
             noMsg.innerHTML = '<h3 style="color: var(--primary-color);"><span class="ar">لا يوجد محتوى مطابق لبحثك 😔</span><span class="en">No content matches your search 😔</span></h3>';
             container.appendChild(noMsg);
@@ -170,7 +165,7 @@ window.filterSearch = (inputId, listId) => {
             noMsg.style.display = 'block';
         }
     } else if (noMsg) {
-        noMsg.style.display = 'none'; // لو مسحنا البحث والداتا رجعت، نخفي الرسالة
+        noMsg.style.display = 'none';
     }
 };
 
@@ -191,17 +186,14 @@ window.toggleLanguage = () => {
 window.toggleMobileMenu = () => { document.getElementById('nav-links').classList.toggle('show'); };
 window.showPage = (id, el) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-links a').forEach(l=>l.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(window.innerWidth < 768) toggleMobileMenu(); };
 
-// --- تعديل زرار المود (عشان يبدل اللوجو كمان) ---
 window.toggleTheme = () => { 
     const body = document.body;
     const logo = document.getElementById('site-logo');
     body.classList.toggle('dark-mode'); 
-    
-    // تبديل اللوجو بناءً على المود
     if (body.classList.contains('dark-mode')) {
-        logo.src = 'AM (1).png'; // اللوجو الأبيض
+        logo.src = 'AM (1).png'; 
     } else {
-        logo.src = 'AM.png'; // اللوجو الأسود
+        logo.src = 'AM.png'; 
     }
 };
 
