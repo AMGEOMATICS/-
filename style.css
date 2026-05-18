@@ -179,5 +179,23 @@ button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 107
     .nav-links.show { display: flex; }
     .hero-content h1 { font-size: 2.3rem; }
     .hero-content p { font-size: 1.1rem; }
+
+    /* تنسيق الإشعارات ولوحة الأدمن */
+.notif-item {
+    padding: 15px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--glass-border);
+    margin-bottom: 10px;
+}
+.notif-item.approved { border-right: 4px solid #28a745; }
+.notif-item.rejected { border-right: 4px solid #dc3545; }
+
+.admin-actions {
+    display: flex; gap: 10px; margin-top: 15px;
+}
+.admin-actions button {
+    flex: 1; padding: 8px; font-size: 0.9em; border-radius: 8px;
+}
     .start-btn { padding: 14px 45px; font-size: 1.2rem; }
 }
