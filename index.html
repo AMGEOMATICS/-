@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AM Geomatics</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-mode"> 
+
+    <div class="earth-bg" style="background-image: url('earth.jpg');"></div>
+
+    <nav>
+        <div class="logo">
+            <img src="AM (1).png" alt="Logo" id="site-logo">
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="active" onclick="showPage('home', this)">الرئيسية</a></li>
+            <li><a href="#" onclick="showPage('data', this)">بيانات</a></li>
+            <li><a href="#" onclick="showPage('courses', this)">دورات</a></li>
+            <li><a href="#" onclick="showPage('sites', this)">أهم المواقع</a></li>
+            <li><a href="#" onclick="showPage('about', this)">حول</a></li>
+        </ul>
+        <div class="nav-actions">
+            <span class="visitor-count">الزوار: <span id="count">120</span></span>
+            <button onclick="toggleTheme()" id="theme-btn">☀️ لايت مود</button>
+            <button id="login-btn-nav" onclick="openModal('login-modal')" class="login-btn">تسجيل الدخول</button>
+            <button id="logout-btn-nav" onclick="logoutUser()" class="login-btn" style="display: none; background-color: #dc3545;">تسجيل خروج</button>
+        </div>
+    </nav>
+
+    <section id="home" class="page active">
+        <div class="hero-content">
+            <h1>بتدور علي شيب فايل لمنطقه الدراسه؟</h1>
+            <p>مستني ايه! ابدا هنا ومجاني 100%</p>
+            <button class="start-btn" onclick="openModal('login-modal')">Start</button>
+        </div>
+    </section>
+
+    <section id="data" class="page">
+        <div class="search-container">
+            <h2>محرك بحث البيانات الجغرافية</h2>
+            <div class="search-wrapper">
+                <input type="text" placeholder="ابحث عن شيب فايل، جيوداتابيز..." class="search-bar">
+                <button class="create-btn" onclick="openModal('create-data-modal')">إنشاء مشروع جديد</button>
+            </div>
+        </div>
+        <div class="content-grid" id="data-list"></div>
+    </section>
+
+    <section id="courses" class="page">
+        <div class="search-container">
+            <h2>محرك بحث الدورات التعليمية</h2>
+            <div class="search-wrapper">
+                <input type="text" placeholder="ابحث عن الدورات والكورسات..." class="search-bar">
+                <button class="create-btn" onclick="openModal('create-course-modal')">إنشاء دورة جديدة</button>
+            </div>
+        </div>
+        <div class="content-grid" id="courses-list"></div>
+    </section>
+
+    <section id="sites" class="page">
+        <div class="search-container">
+            <h2>محرك بحث المواقع المفيدة</h2>
+            <div class="search-wrapper">
+                <input type="text" placeholder="ابحث عن مواقع تحميل الداتا..." class="search-bar">
+                <button class="create-btn" onclick="openModal('create-site-modal')">إنشاء موقع جديد</button>
+            </div>
+        </div>
+        <div class="content-grid" id="sites-list"></div>
+    </section>
+
+    <section id="about" class="page">
+        <div class="about-card">
+            <h2>من نحن</h2>
+            <p>السلام عليكم، انا الطالب رِفْعَت هانئ محمد من قسم جيوماتكس القاهره. انا صممت الموقع ده علشان بدل ما كنا بندور علي البيانات من امكان مختلفه وبعضها بيكون متفيرس، دلوقتي تقدر تحمل الداتا من مكان واحد وامان من ناحيه ان جوجل درايف بيعمل فحص للملفات وتقدر تحملها مجاني.</p>
+        </div>
+    </section>
+
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('login-modal')">&times;</span>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">تسجيل الدخول</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">حساب جديد</button>
+            </div>
+            <div id="login-form" class="auth-form" style="display: flex;">
+                <input type="email" id="login-email" placeholder="الايميل">
+                <input type="password" id="login-pass" placeholder="الباسورد">
+                <button class="submit-btn" onclick="loginUser()">دخول</button>
+            </div>
+            <div id="register-form" class="auth-form" style="display: none;">
+                <input type="text" id="reg-name" placeholder="اسم المستخدم">
+                <input type="email" id="reg-email" placeholder="الايميل">
+                <input type="password" id="reg-pass" placeholder="الباسورد">
+                <button class="submit-btn" onclick="registerUser()">إنشاء حساب</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="create-data-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('create-data-modal')">&times;</span>
+            <h2>إضافة مشروع جديد</h2>
+            <input type="text" id="data-title" placeholder="عنوان المشروع">
+            <select id="data-format">
+                <option value="Shapefile">Shapefile</option>
+                <option value="Geodatabase">Geodatabase</option>
+                <option value="GeoTIFF">GeoTIFF</option>
+                <option value="KML/KMZ">KML / KMZ</option>
+            </select>
+            <input type="date" id="data-date">
+            <textarea id="data-details" placeholder="تفاصيل المشروع (اختياري)"></textarea>
+            <input type="url" id="data-link" placeholder="لينك جوجل درايف للملف">
+            <p id="drive-error" style="color: red; display: none;">هنا هتحط لينك جوجل درايف للملف بس مش اي موقع تاني</p>
+            <button class="submit-btn" onclick="saveDataProject()">نشر</button>
+        </div>
+    </div>
+
+    <div id="create-course-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('create-course-modal')">&times;</span>
+            <h2>إضافة دورة تعليمية جديدة</h2>
+            <input type="text" id="course-title" placeholder="عنوان الدورة التعليمية">
+            <textarea id="course-details" placeholder="تفاصيل الدورة (اختياري)"></textarea>
+            <input type="url" id="course-link" placeholder="لينك فيديو اليوتيوب فقط">
+            <p id="youtube-error" style="color: red; display: none;">هنا هتحط لينك فيديو من اليوتيوب بس</p>
+            <button class="submit-btn" onclick="saveCourse()">نشر الدورة</button>
+        </div>
+    </div>
+
+    <div id="create-site-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('create-site-modal')">&times;</span>
+            <h2>إضافة موقع مهم جديد</h2>
+            <input type="text" id="site-title" placeholder="اسم الموقع (مثل: OpenStreetMap)">
+            <textarea id="site-details" placeholder="تفاصيل الموقع (اختياري)"></textarea>
+            <input type="url" id="site-link" placeholder="رابط أو لينك الموقع">
+            <button class="submit-btn" onclick="saveSite()">نشر الموقع</button>
+        </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
