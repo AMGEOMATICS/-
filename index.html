@@ -8,7 +8,7 @@
 </head>
 <body class="dark-mode"> 
 
-    <div class="earth-bg" style="background-image: url('Earth.jpg');"></div>
+    <div class="earth-bg" style="background-image: url('earth.gif');"></div>
 
     <nav>
         <div class="logo">
@@ -41,7 +41,7 @@
         <div class="search-container">
             <h2>محرك بحث البيانات الجغرافية</h2>
             <div class="search-wrapper">
-                <input type="text" placeholder="ابحث عن شيب فايل، جيوداتابيز..." class="search-bar">
+                <input type="text" id="search-data" placeholder="ابحث عن شيب فايل، جيوداتابيز..." class="search-bar" onkeyup="filterSearch('search-data', 'data-list')">
                 <button class="create-btn" onclick="openModal('create-data-modal')">إنشاء مشروع جديد</button>
             </div>
         </div>
@@ -52,7 +52,7 @@
         <div class="search-container">
             <h2>محرك بحث الدورات التعليمية</h2>
             <div class="search-wrapper">
-                <input type="text" placeholder="ابحث عن الدورات والكورسات..." class="search-bar">
+                <input type="text" id="search-courses" placeholder="ابحث عن الدورات والكورسات..." class="search-bar" onkeyup="filterSearch('search-courses', 'courses-list')">
                 <button class="create-btn" onclick="openModal('create-course-modal')">إنشاء دورة جديدة</button>
             </div>
         </div>
@@ -63,7 +63,7 @@
         <div class="search-container">
             <h2>محرك بحث المواقع المفيدة</h2>
             <div class="search-wrapper">
-                <input type="text" placeholder="ابحث عن مواقع تحميل الداتا..." class="search-bar">
+                <input type="text" id="search-sites" placeholder="ابحث عن مواقع تحميل الداتا..." class="search-bar" onkeyup="filterSearch('search-sites', 'sites-list')">
                 <button class="create-btn" onclick="openModal('create-site-modal')">إنشاء موقع جديد</button>
             </div>
         </div>
