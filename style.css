@@ -82,7 +82,7 @@ nav {
     transition: border-color 0.3s, background 0.3s;
 }
 
-nav .logo img { width: 180px; max-height: 60px; object-fit: contain; }
+nav .logo img { width: 180px; max-height: 150px; object-fit: contain; }
 
 .nav-links { display: flex; gap: 30px; list-style: none; padding: 0; }
 .nav-links a { color: var(--text-color); text-decoration: none; font-weight: bold; font-size: 1.1em; transition: 0.3s; }
