@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AM Geomatics</title>
     <link rel="stylesheet" href="style.css">
+    
+    <link rel="icon" type="image/png" href="AM (1).png">
 </head>
 <body class="dark-mode lang-ar" dir="rtl"> 
 
@@ -19,44 +21,31 @@
         <div class="menu-icon" onclick="toggleMobileMenu()">☰</div>
 
         <ul class="nav-links" id="nav-links">
-            <li><a href="#" class="active" onclick="showPage('home', this)">
-                <span class="ar">الرئيسية</span><span class="en">Home</span>
-            </a></li>
-            <li><a href="#" onclick="showPage('data', this)">
-                <span class="ar">بيانات</span><span class="en">Data</span>
-            </a></li>
-            <li><a href="#" onclick="showPage('courses', this)">
-                <span class="ar">دورات</span><span class="en">Courses</span>
-            </a></li>
-            <li><a href="#" onclick="showPage('sites', this)">
-                <span class="ar">أهم المواقع</span><span class="en">Top Sites</span>
-            </a></li>
-            <li><a href="#" onclick="showPage('about', this)">
-                <span class="ar">حول</span><span class="en">About</span>
-            </a></li>
+            <li><a href="#" class="active" onclick="showPage('home', this)"><span class="ar">الرئيسية</span><span class="en">Home</span></a></li>
+            <li><a href="#" onclick="showPage('data', this)"><span class="ar">بيانات</span><span class="en">Data</span></a></li>
+            <li><a href="#" onclick="showPage('courses', this)"><span class="ar">دورات</span><span class="en">Courses</span></a></li>
+            <li><a href="#" onclick="showPage('sites', this)"><span class="ar">أهم المواقع</span><span class="en">Top Sites</span></a></li>
+            <li><a href="#" onclick="showPage('about', this)"><span class="ar">حول</span><span class="en">About</span></a></li>
+            <li><a href="#" onclick="showPage('donate', this)"><span class="ar">تبرع 🧡</span><span class="en">Donate 🧡</span></a></li>
+            
+            <li id="admin-nav-link" style="display: none;"><a href="#" onclick="showPage('admin', this)" style="color: #dc3545;">⚙️ <span class="ar">لوحة التحكم</span><span class="en">Admin Panel</span></a></li>
         </ul>
         <div class="nav-actions">
+            <button id="notif-btn" class="icon-btn" onclick="openModal('notif-modal')" style="display:none; position:relative; font-size: 1.2em; border:none;">
+                🔔<span id="notif-badge" style="display:none; position:absolute; top:-2px; right:-2px; background:#dc3545; color:white; border-radius:50%; width:16px; height:16px; font-size:11px; line-height:16px; text-align:center;">!</span>
+            </button>
+            
             <button onclick="toggleLanguage()" id="lang-btn" class="icon-btn">🌐 EN</button>
             <button onclick="toggleTheme()" id="theme-btn" class="icon-btn">☀️</button>
-            <button id="login-btn-nav" onclick="openModal('login-modal')" class="login-btn">
-                <span class="ar">تسجيل الدخول</span><span class="en">Login</span>
-            </button>
-            <button id="logout-btn-nav" onclick="logoutUser()" class="login-btn" style="display: none; background-color: #dc3545;">
-                <span class="ar">تسجيل خروج</span><span class="en">Logout</span>
-            </button>
+            <button id="login-btn-nav" onclick="openModal('login-modal')" class="login-btn"><span class="ar">تسجيل الدخول</span><span class="en">Login</span></button>
+            <button id="logout-btn-nav" onclick="logoutUser()" class="login-btn" style="display: none; background-color: #dc3545;"><span class="ar">تسجيل خروج</span><span class="en">Logout</span></button>
         </div>
     </nav>
 
     <section id="home" class="page active">
         <div class="hero-content">
-            <h1>
-                <span class="ar">بتدور علي شيب فايل<br>لمنطقة الدراسة؟</span>
-                <span class="en">Looking for a Shapefile<br>for your study area?</span>
-            </h1>
-            <p>
-                <span class="ar">مستني ايه! ابدأ هنا ومجاني 100%</span>
-                <span class="en">What are you waiting for? Start here, 100% Free!</span>
-            </p>
+            <h1><span class="ar">بتدور علي شيب فايل<br>لمنطقة الدراسة؟</span><span class="en">Looking for a Shapefile<br>for your study area?</span></h1>
+            <p><span class="ar">مستني ايه! ابدأ هنا ومجاني 100%</span><span class="en">What are you waiting for? Start here, 100% Free!</span></p>
             <button class="start-btn" onclick="openModal('login-modal')">Start</button>
         </div>
     </section>
@@ -66,9 +55,7 @@
             <h2><span class="ar">محرك بحث البيانات الجغرافية</span><span class="en">Geographic Data Search</span></h2>
             <div class="search-wrapper">
                 <input type="text" id="search-data" placeholder="ابحث عن شيب فايل، جيوداتابيز..." class="search-bar" onkeyup="filterSearch('search-data', 'data-list')">
-                <button class="create-btn" onclick="openModal('create-data-modal')" style="display:none;">
-                    <span class="ar">إنشاء مشروع جديد</span><span class="en">Create New Project</span>
-                </button>
+                <button class="create-btn" onclick="openModal('create-data-modal')" style="display:none;"><span class="ar">إنشاء مشروع جديد</span><span class="en">Create New Project</span></button>
             </div>
         </div>
         <div class="content-grid" id="data-list"></div>
@@ -79,9 +66,7 @@
             <h2><span class="ar">محرك بحث الدورات التعليمية</span><span class="en">Courses Search</span></h2>
             <div class="search-wrapper">
                 <input type="text" id="search-courses" placeholder="ابحث عن الدورات والكورسات..." class="search-bar" onkeyup="filterSearch('search-courses', 'courses-list')">
-                <button class="create-btn" onclick="openModal('create-course-modal')" style="display:none;">
-                    <span class="ar">إنشاء دورة جديدة</span><span class="en">Create New Course</span>
-                </button>
+                <button class="create-btn" onclick="openModal('create-course-modal')" style="display:none;"><span class="ar">إنشاء دورة جديدة</span><span class="en">Create New Course</span></button>
             </div>
         </div>
         <div class="content-grid" id="courses-list"></div>
@@ -92,24 +77,51 @@
             <h2><span class="ar">محرك بحث المواقع المفيدة</span><span class="en">Useful Sites Search</span></h2>
             <div class="search-wrapper">
                 <input type="text" id="search-sites" placeholder="ابحث عن مواقع تحميل الداتا..." class="search-bar" onkeyup="filterSearch('search-sites', 'sites-list')">
-                <button class="create-btn" onclick="openModal('create-site-modal')" style="display:none;">
-                    <span class="ar">إنشاء موقع جديد</span><span class="en">Add New Site</span>
-                </button>
+                <button class="create-btn" onclick="openModal('create-site-modal')" style="display:none;"><span class="ar">إنشاء موقع جديد</span><span class="en">Add New Site</span></button>
             </div>
         </div>
         <div class="content-grid" id="sites-list"></div>
     </section>
 
     <section id="about" class="page">
-        <div class="about-card glass-panel">
+        <div class="about-card glass-panel" style="max-width: 800px; margin: auto; margin-top: 5vh; text-align: center;">
             <h2><span class="ar">من نحن</span><span class="en">About Us</span></h2>
             <p class="ar">السلام عليكم، انا الطالب رِفْعَت هانئ محمد من قسم جيوماتكس القاهرة. صممت الموقع ده علشان نجمع كل الداتا الجغرافية في مكان واحد أمان ومجاني.</p>
-          <p class="ar">للتواصل علي الايميل لوجود مشاكل وحلها Refathany2005@gmail.com</p>
             <p class="en">Hello, I am Refat Hany Mohamed, a Geomatics student at Cairo University. I designed this website to gather all geographic data in one safe, free place.</p>
-                    <p class="en">For inquiries and solutions, please contact Refathany2005@gmail.com</p>
-
         </div>
     </section>
+
+    <section id="donate" class="page">
+        <div class="about-card glass-panel" style="max-width: 600px; margin: auto; margin-top: 10vh; text-align: center;">
+            <h2 style="color: var(--primary-color); font-size: 2.5em;"><span class="ar">ادعمنا 🧡</span><span class="en">Support Us 🧡</span></h2>
+            <p class="ar" style="font-size: 1.2em; line-height: 1.8;">تقدر تتبرع لينا علشان نقدر نطور الموقع اكتر واكتر، ونقدر نوفر ليكم مساحات تخزين وسيرفرات أسرع تخدم كل طلاب القسم.</p>
+            <p class="en" style="font-size: 1.2em; line-height: 1.8;">You can donate to us so we can develop the site more and provide faster servers and storage for all students.</p>
+            <button class="start-btn" style="margin-top: 20px;" onclick="alert('هنضيف لينك الدفع هنا قريب!')"><span class="ar">تبرع الآن</span><span class="en">Donate Now</span></button>
+        </div>
+    </section>
+
+    <section id="admin" class="page">
+        <div class="search-container">
+            <h2 style="color: #dc3545;">⚙️ لوحة تحكم الإدارة (المنشورات المعلقة)</h2>
+            <p>أي بوست هيتنشر هيظهرلك هنا الأول عشان تفحصه وتوافق عليه أو ترفضه.</p>
+        </div>
+        <h3 style="margin-top: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">البيانات والمشاريع</h3>
+        <div class="content-grid" id="admin-data-list"></div>
+        <h3 style="margin-top: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">الدورات</h3>
+        <div class="content-grid" id="admin-courses-list"></div>
+        <h3 style="margin-top: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">المواقع</h3>
+        <div class="content-grid" id="admin-sites-list"></div>
+    </section>
+
+    <div id="notif-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close" onclick="closeModal('notif-modal')">&times;</span>
+            <h2><span class="ar">الإشعارات 🔔</span><span class="en">Notifications 🔔</span></h2>
+            <div id="notif-list" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                <p style="text-align:center;">لا توجد إشعارات حالياً.</p>
+            </div>
+        </div>
+    </div>
 
     <div id="login-modal" class="modal">
         <div class="modal-content glass-panel">
@@ -118,14 +130,12 @@
                 <button class="auth-tab active" onclick="switchAuthTab('login')"><span class="ar">دخول</span><span class="en">Login</span></button>
                 <button class="auth-tab" onclick="switchAuthTab('register')"><span class="ar">حساب جديد</span><span class="en">Sign Up</span></button>
             </div>
-          <div id="login-form" class="auth-form" style="display: flex;">
+            <div id="login-form" class="auth-form" style="display: flex;">
                 <input type="email" id="login-email" placeholder="الايميل | Email">
                 <input type="password" id="login-pass" placeholder="الباسورد | Password">
-                
                 <a href="#" onclick="resetPassword()" style="color: var(--primary-color); font-size: 0.9em; text-decoration: none; text-align: right; margin-top: -5px;">
                     <span class="ar">نسيت كلمة السر؟</span><span class="en">Forgot Password?</span>
                 </a>
-
                 <button class="submit-btn" onclick="loginUser()"><span class="ar">دخول</span><span class="en">Login</span></button>
             </div>
             <div id="register-form" class="auth-form" style="display: none;">
@@ -151,7 +161,7 @@
             <input type="date" id="data-date">
             <textarea id="data-details" placeholder="تفاصيل المشروع (اختياري)"></textarea>
             <input type="url" id="data-link" placeholder="لينك جوجل درايف للملف">
-            <button class="submit-btn" onclick="saveDataProject()">نشر</button>
+            <button class="submit-btn" onclick="saveDataProject()">إرسال للمراجعة</button>
         </div>
     </div>
 
@@ -162,7 +172,7 @@
             <input type="text" id="course-title" placeholder="عنوان الدورة">
             <textarea id="course-details" placeholder="تفاصيل الدورة"></textarea>
             <input type="url" id="course-link" placeholder="لينك اليوتيوب فقط">
-            <button class="submit-btn" onclick="saveCourse()">نشر</button>
+            <button class="submit-btn" onclick="saveCourse()">إرسال للمراجعة</button>
         </div>
     </div>
 
@@ -173,7 +183,7 @@
             <input type="text" id="site-title" placeholder="اسم الموقع">
             <textarea id="site-details" placeholder="التفاصيل"></textarea>
             <input type="url" id="site-link" placeholder="رابط الموقع">
-            <button class="submit-btn" onclick="saveSite()">نشر</button>
+            <button class="submit-btn" onclick="saveSite()">إرسال للمراجعة</button>
         </div>
     </div>
 
