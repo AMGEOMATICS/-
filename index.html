@@ -118,9 +118,14 @@
                 <button class="auth-tab active" onclick="switchAuthTab('login')"><span class="ar">دخول</span><span class="en">Login</span></button>
                 <button class="auth-tab" onclick="switchAuthTab('register')"><span class="ar">حساب جديد</span><span class="en">Sign Up</span></button>
             </div>
-            <div id="login-form" class="auth-form" style="display: flex;">
+          <div id="login-form" class="auth-form" style="display: flex;">
                 <input type="email" id="login-email" placeholder="الايميل | Email">
                 <input type="password" id="login-pass" placeholder="الباسورد | Password">
+                
+                <a href="#" onclick="resetPassword()" style="color: var(--primary-color); font-size: 0.9em; text-decoration: none; text-align: right; margin-top: -5px;">
+                    <span class="ar">نسيت كلمة السر؟</span><span class="en">Forgot Password?</span>
+                </a>
+
                 <button class="submit-btn" onclick="loginUser()"><span class="ar">دخول</span><span class="en">Login</span></button>
             </div>
             <div id="register-form" class="auth-form" style="display: none;">
