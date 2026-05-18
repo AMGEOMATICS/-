@@ -41,7 +41,7 @@ body, html {
 .earth-bg {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background-size: cover; background-position: center;
-    opacity: 0.15; z-index: -1; pointer-events: none;
+    opacity: 1; z-index: -1; pointer-events: none;
 }
 
 /* شريط التنقل الزجاجي */
