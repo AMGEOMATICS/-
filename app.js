@@ -18,7 +18,6 @@ const db = getFirestore(app);
 const ADMIN_EMAIL = "refathany2005@gmail.com"; 
 let currentUser = null;
 
-// دالة صغيرة بتعرفنا الموقع إنجليزي ولا لأ
 const isEn = () => document.body.classList.contains('lang-en');
 
 onAuthStateChanged(auth, (user) => {
@@ -51,7 +50,7 @@ onAuthStateChanged(auth, (user) => {
     loadAllData();
 });
 
-// --- دوال التسجيل والدخول (مترجمة) ---
+// دوال التسجيل والدخول
 window.registerUser = async () => { 
     const name = document.getElementById('reg-name').value;
     const email = document.getElementById('reg-email').value;
@@ -65,7 +64,6 @@ window.registerUser = async () => {
         await sendEmailVerification(userCredential.user);
         await signOut(auth);
         
-        // الرسالة الذكية للغتين
         alert(isEn() 
             ? `Account created successfully, ${name}!\n\nWe have sent an activation link to your email.` 
             : `تم إنشاء الحساب بنجاح يا ${name}!\n\nبعتنالك رسالة تفعيل على الإيميل.`);
@@ -111,7 +109,7 @@ window.resetPassword = async () => {
 
 window.logoutUser = async () => { await signOut(auth); window.location.reload(); };
 
-// --- دوال النشر (مترجمة) ---
+// دوال النشر والإضافة
 window.saveDataProject = async () => {
     if(!currentUser) return;
     await addDoc(collection(db, "projects"), {
@@ -141,6 +139,20 @@ window.saveCourse = async () => {
     closeModal('create-course-modal');
 };
 
+window.saveProgram = async () => {
+    if(!currentUser) return;
+    await addDoc(collection(db, "programs"), {
+        title: document.getElementById('program-title').value,
+        details: document.getElementById('program-details').value,
+        link: document.getElementById('program-link').value,
+        publisherName: currentUser.displayName || currentUser.email.split('@')[0], 
+        publisherEmail: currentUser.email,
+        status: 'pending'
+    });
+    alert(isEn() ? "Program submitted for review!" : "تم إرسال البرنامج للمراجعة!"); 
+    closeModal('create-program-modal');
+};
+
 window.saveSite = async () => {
     if(!currentUser) return;
     await addDoc(collection(db, "sites"), {
@@ -155,14 +167,22 @@ window.saveSite = async () => {
     closeModal('create-site-modal');
 };
 
-// --- الماكينة الأساسية ---
+// جلب وعرض البيانات
 function loadAllData() {
     listenCollection('projects', 'data-list', 'admin-data-list');
     listenCollection('courses', 'courses-list', 'admin-courses-list');
+    listenCollection('programs', 'programs-list', 'admin-programs-list');
     listenCollection('sites', 'sites-list', 'admin-sites-list');
 }
 
 let userNotifications = []; 
+let lastSeenNotifCount = 0;
+
+window.openNotifications = () => {
+    lastSeenNotifCount = userNotifications.length; 
+    document.getElementById('notif-badge').style.display = 'none'; 
+    openModal('notif-modal'); 
+};
 
 function listenCollection(colName, publicId, adminId) {
     onSnapshot(collection(db, colName), (snapshot) => {
@@ -188,7 +208,6 @@ function listenCollection(colName, publicId, adminId) {
                 }
             }
 
-            // ضفنا كلاس en و ar عشان كلمة "الناشر" أو "Publisher" تتغير
             const cardHTML = `
                 <h3>${data.title}</h3>
                 ${data.format ? `<p><strong><span class="ar">الصيغة:</span><span class="en">Format:</span></strong> ${data.format}</p>` : ''}
@@ -203,8 +222,8 @@ function listenCollection(colName, publicId, adminId) {
                     adminCard.className = 'data-card glass-panel';
                     adminCard.innerHTML = cardHTML + `
                         <div class="admin-actions">
-                            <button onclick="approvePost('${colName}', '${id}')" style="background:#28a745;">موافقة ✅</button>
-                            <button onclick="rejectPost('${colName}', '${id}')" style="background:#dc3545;">رفض ❌</button>
+                            <button onclick="approvePost('${colName}', '${id}')" style="background:#28a745; color: white;">موافقة ✅</button>
+                            <button onclick="rejectPost('${colName}', '${id}')" style="background:#dc3545; color: white;">رفض ❌</button>
                         </div>
                     `;
                     adminCont.appendChild(adminCard);
@@ -232,23 +251,12 @@ window.rejectPost = async (col, id) => {
 };
 
 window.deleteItem = async (col, id) => { if(confirm(isEn() ? "Are you sure you want to delete this?" : "أكيد هتمسح البوست ده؟")) await deleteDoc(doc(db, col, id)); };
-let userNotifications = []; 
-let lastSeenNotifCount = 0; // المتغير الجديد اللي بيحفظ عدد الإشعارات اللي إنت شفتها
 
-// الدالة الجديدة اللي بتفتح الإشعارات وتطفي اللمبة الحمراء
-window.openNotifications = () => {
-    lastSeenNotifCount = userNotifications.length; // بنسجل إنك شفت كل الإشعارات الحالية
-    document.getElementById('notif-badge').style.display = 'none'; // بنخفي النقطة الحمراء
-    openModal('notif-modal'); // بنفتح النافذة
-};
-
-// تحديث دالة عرض الإشعارات عشان متنورش غير لو في جديد
 function renderNotifications() {
     const notifList = document.getElementById('notif-list');
     const badge = document.getElementById('notif-badge');
     
     if(userNotifications.length > 0) {
-        // لو عدد الإشعارات زاد عن اللي إنت شفته قبل كده، نور اللمبة
         if (userNotifications.length > lastSeenNotifCount) {
             badge.style.display = 'block';
         }
@@ -278,16 +286,8 @@ function renderNotifications() {
         `;
     }
 }
-    } else {
-        notifList.innerHTML = `
-            <p style="text-align:center;">
-                <span class="ar">لا توجد إشعارات حالياً.</span>
-                <span class="en">No notifications currently.</span>
-            </p>
-        `;
-    }
-}
 
+// البحث
 window.filterSearch = (inputId, listId) => {
     const input = document.getElementById(inputId).value.toLowerCase();
     const container = document.getElementById(listId);
@@ -321,11 +321,13 @@ window.filterSearch = (inputId, listId) => {
     }
 };
 
+// الترجمة
 window.toggleLanguage = () => {
     const body = document.body;
     const btn = document.getElementById('lang-btn');
     const searchData = document.getElementById('search-data');
     const searchCourses = document.getElementById('search-courses');
+    const searchPrograms = document.getElementById('search-programs');
     const searchSites = document.getElementById('search-sites');
 
     if(body.classList.contains('lang-ar')) {
@@ -334,6 +336,7 @@ window.toggleLanguage = () => {
         btn.innerText = '🌐 AR';
         if(searchData) searchData.placeholder = "Search for shapefile, geodatabase...";
         if(searchCourses) searchCourses.placeholder = "Search for courses...";
+        if(searchPrograms) searchPrograms.placeholder = "Search for programs...";
         if(searchSites) searchSites.placeholder = "Search for useful sites...";
     } else {
         body.classList.replace('lang-en', 'lang-ar');
@@ -341,6 +344,7 @@ window.toggleLanguage = () => {
         btn.innerText = '🌐 EN';
         if(searchData) searchData.placeholder = "ابحث عن شيب فايل، جيوداتابيز...";
         if(searchCourses) searchCourses.placeholder = "ابحث عن الدورات والكورسات...";
+        if(searchPrograms) searchPrograms.placeholder = "ابحث عن برامج...";
         if(searchSites) searchSites.placeholder = "ابحث عن مواقع تحميل الداتا...";
     }
 };
@@ -349,7 +353,6 @@ window.toggleMobileMenu = () => { document.getElementById('nav-links').classList
 window.showPage = (id, el) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-links a').forEach(l=>l.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(window.innerWidth < 900) toggleMobileMenu(); };
 window.toggleTheme = () => { const body = document.body; const logo = document.getElementById('site-logo'); body.classList.toggle('dark-mode'); logo.src = body.classList.contains('dark-mode') ? 'AM (1).png' : 'AM.png'; };
 
-// زرار البداية الذكي
 window.handleStartBtn = () => {
     if (currentUser) {
         const dataNavLink = document.querySelectorAll('.nav-links a')[1]; 
