@@ -1,25 +1,25 @@
 :root {
-    --bg-color: #f4f6f9;
+    --bg-color: #f1f3f7;
     --text-color: #1a1e29;
-    --nav-bg: rgba(255, 255, 255, 0.75);
+    --nav-bg: rgba(255, 255, 255, 0.7);
     --primary-color: #ff6b00; 
     --modal-overlay: rgba(240, 242, 245, 0.4);
-    --glass-bg: rgba(255, 255, 255, 0.6);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --nav-border: rgba(255, 107, 0, 0.2); /* خط فاصل لايت */
+    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-border: rgba(0, 0, 0, 0.06);
+    --nav-border: rgba(0, 0, 0, 0.06); /* خط فاصل ناعم جداً للايت مود */
     --input-bg: rgba(0, 0, 0, 0.04);
 }
 
 body.dark-mode {
-    --bg-color: #0b0d13; /* رمادي فضاء غامق فخم جداً مش أسود متفحم */
+    --bg-color: #0b0e14; /* رمادي فضاء داكن فخم مريح للعين ومش أسود متفحم */
     --text-color: #f1f5f9;
-    --nav-bg: rgba(11, 13, 19, 0.7); 
+    --nav-bg: rgba(11, 14, 20, 0.65); 
     --primary-color: #ff6b00;
     --modal-overlay: rgba(0, 0, 0, 0.6);
-    --glass-bg: rgba(22, 28, 45, 0.45); /* زجاج داكن بريميوم */
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --nav-border: rgba(255, 107, 0, 0.4); /* خط فاصل نيون برتقالي مضيء للدارك مود */
-    --input-bg: rgba(255, 255, 255, 0.06);
+    --glass-bg: rgba(20, 26, 38, 0.45); /* زجاج داكن احترافي */
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --nav-border: rgba(255, 255, 255, 0.07); /* خط فاصل زجاجي راقي وبسيط جداً للدارك مود */
+    --input-bg: rgba(255, 255, 255, 0.05);
 }
 
 body, html {
@@ -32,22 +32,28 @@ body, html {
 .lang-ar .en { display: none !important; }
 .lang-en .ar { display: none !important; }
 
-/* كود بلور الخلفية الاحترافي بدون تدمير جودة الكلام */
+/* تثبيت طبقة خلفية كوكب الأرض بالبلور منعا لأي خلل شاشات */
 .earth-bg {
     position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
     background-image: url('earth.jpg'); background-size: cover; background-position: center;
-    filter: blur(5px); -webkit-filter: blur(5px); /* تأثير البلور المطور */
-    transform: scale(1.03); /* لمنع حواف البلور البيضاء */
-    opacity: 0.35; z-index: -2; pointer-events: none;
+    filter: blur(12px); -webkit-filter: blur(12px); /* بلور سينمائي ناعم وعميق */
+    transform: scale(1.05);
+    opacity: 0.28; z-index: -2; pointer-events: none;
 }
 
-/* شريط التنقل والخط الفاصل */
+.dark-overlay {
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+    background: radial-gradient(circle at center, transparent 20%, var(--bg-color) 80%);
+    z-index: -1; pointer-events: none;
+}
+
+/* شريط التنقل المتناسق بالخط الزجاجي الجديد */
 nav {
     display: flex; justify-content: space-between; align-items: center;
     background: var(--nav-bg);
-    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
     padding: 0 5%; height: 80px;
-    border-bottom: 2px solid var(--nav-border); /* الخط الفاصل المطور اللي طلبته */
+    border-bottom: 1px solid var(--nav-border); /* شيلنا الخط البرتقالي المزعج هنا */
     position: sticky; top: 0; z-index: 100;
     transition: border-color 0.3s, background 0.3s;
 }
@@ -73,45 +79,45 @@ button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 107
 .page.active { display: block; animation: fadeIn 0.4s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-/* --- تصميم واجهة ترحيبية كبرى ومبهرة جداً --- */
+/* الواجهة الرئيسية الترحيبية الكبيرة والمبهرة */
 .hero-content {
-    text-align: center; margin-top: 12vh;
+    text-align: center; margin-top: 14vh;
 }
 .hero-content h1 {
-    font-size: 4.5rem; font-weight: 900; line-height: 1.2; margin-bottom: 25px;
-    background: linear-gradient(135deg, #ffffff 50%, var(--primary-color));
+    font-size: 4.8rem; font-weight: 900; line-height: 1.25; margin-bottom: 25px;
+    background: linear-gradient(135deg, #ffffff 40%, var(--primary-color));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    text-shadow: 0 15px 40px rgba(0,0,0,0.6); /* الظل والعمق للمبهر */
+    text-shadow: 0 15px 35px rgba(0,0,0,0.5);
     letter-spacing: -1px;
 }
 .hero-content p {
-    font-size: 1.8rem; color: #cbd5e1; font-weight: 500; margin-bottom: 45px;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    font-size: 1.7rem; color: #cbd5e1; font-weight: 500; margin-bottom: 45px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.4);
 }
 .start-btn {
-    font-size: 1.6rem; padding: 16px 65px; border-radius: 50px;
+    font-size: 1.5rem; padding: 16px 60px; border-radius: 50px;
     background: linear-gradient(90deg, var(--primary-color), #ff9f43);
-    box-shadow: 0 0 35px rgba(255, 107, 0, 0.5); /* إشعاع للزرار */
+    box-shadow: 0 0 30px rgba(255, 107, 0, 0.4);
 }
-.start-btn:hover { transform: scale(1.05); box-shadow: 0 0 45px rgba(255, 107, 0, 0.8); }
+.start-btn:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(255, 107, 0, 0.7); }
 
-/* محرك البحث الكلاس */
+/* محركات البحث */
 .search-container { text-align: center; margin-top: 3vh; }
 .search-container h2 { font-size: 2.2em; margin-bottom: 25px; font-weight: 800; }
 .search-wrapper { display: flex; flex-direction: column; align-items: center; gap: 20px; }
 .search-bar {
     width: 100%; max-width: 650px; padding: 18px 30px; border-radius: 50px;
-    background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); color: var(--text-color);
+    background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); color: var(--text-color);
     font-size: 1.20em; outline: none; backdrop-filter: blur(10px); text-align: center;
 }
-.search-bar:focus { border-color: var(--primary-color); box-shadow: 0 0 20px rgba(255, 107, 0, 0.3); }
+.search-bar:focus { border-color: var(--primary-color); box-shadow: 0 0 20px rgba(255, 107, 0, 0.2); }
 
-/* كروت زجاجية بضل أسود خفيف ممتاز */
+/* كروت زجاجية أنيقة بظلال عميقة وناعمة */
 .glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
     border: 1px solid var(--glass-border); border-radius: 24px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45); /* ضل منبثق فخم وعميق */
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35); /* الضل الأسود الخفيف والناعم */
     padding: 35px;
 }
 
@@ -120,9 +126,9 @@ button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 107
     background: var(--glass-bg); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
     border: 1px solid var(--glass-border); border-radius: 20px;
     padding: 25px; position: relative; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
-.data-card:hover { transform: translateY(-6px); box-shadow: 0 15px 35px rgba(0,0,0,0.4); border-color: rgba(255, 107, 0, 0.3); }
+.data-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.3); border-color: rgba(255, 107, 0, 0.25); }
 .data-card h3 { color: var(--primary-color); margin-top: 0; font-size: 1.4em; }
 .delete-btn { position: absolute; top: 15px; left: 15px; background: #dc3545; padding: 6px 12px; font-size: 0.85em; border-radius: 8px; }
 
@@ -142,7 +148,7 @@ button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 107
 .auth-tab.active { opacity: 1; border-bottom: 3px solid var(--primary-color); color: var(--primary-color); font-weight: bold; }
 .auth-form { flex-direction: column; gap: 15px; }
 
-/* الهامبرجر للموبايل */
+/* زرار المنيو للموبايل */
 .menu-icon { display: none; font-size: 32px; cursor: pointer; color: var(--text-color); }
 
 @media (max-width: 900px) {
@@ -151,10 +157,10 @@ button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 107
         display: none; position: absolute; top: 80px; left: 0; width: 100%;
         background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
         flex-direction: column; text-align: center; padding: 30px 0; gap: 20px;
-        border-bottom: 2px solid var(--nav-border);
+        border-bottom: 1px solid var(--nav-border);
     }
     .nav-links.show { display: flex; }
-    .hero-content h1 { font-size: 2.5rem; }
-    .hero-content p { font-size: 1.2rem; }
-    .start-btn { padding: 14px 45px; font-size: 1.3rem; }
+    .hero-content h1 { font-size: 2.3rem; }
+    .hero-content p { font-size: 1.1rem; }
+    .start-btn { padding: 14px 45px; font-size: 1.2rem; }
 }
