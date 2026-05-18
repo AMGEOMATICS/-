@@ -42,7 +42,7 @@ body, html {
     background-position: center;
     filter: blur(6px); -webkit-filter: blur(6px); /* قللنا البلور شوية عشان تفاصيل الأرض تبان */
     transform: scale(1.03);
-    opacity: 0.55; /* زودنا الشفافية عشان الصورة تنور وتظهر غصب عنها */
+    opacity: 1; /* زودنا الشفافية عشان الصورة تنور وتظهر غصب عنها */
     z-index: -2; 
     pointer-events: none;
 }
