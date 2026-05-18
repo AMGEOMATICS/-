@@ -22,26 +22,25 @@ let currentUser = null;
 onAuthStateChanged(auth, (user) => {
     const loginBtn = document.getElementById('login-btn-nav');
     const logoutBtn = document.getElementById('logout-btn-nav');
-    const createBtns = document.querySelectorAll('.create-btn'); // زراير الإنشاء
+    const createBtns = document.querySelectorAll('.create-btn'); 
     
     if (user) {
         currentUser = user;
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
-        createBtns.forEach(btn => btn.style.display = 'inline-block'); // إظهار الزراير للمسجلين بس
+        createBtns.forEach(btn => btn.style.display = 'inline-block'); 
         closeModal('login-modal');
     } else {
         currentUser = null;
         loginBtn.style.display = 'inline-block';
         logoutBtn.style.display = 'none';
-        createBtns.forEach(btn => btn.style.display = 'none'); // إخفاء الزراير لو مش مسجل
+        createBtns.forEach(btn => btn.style.display = 'none'); 
     }
     loadData('projects', 'data-list');
     loadData('courses', 'courses-list');
     loadData('sites', 'sites-list');
 });
 
-// التسجيل بالاسم
 window.registerUser = async () => {
     const name = document.getElementById('reg-name').value;
     const email = document.getElementById('reg-email').value;
@@ -51,7 +50,6 @@ window.registerUser = async () => {
 
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-        // حفظ اسم المستخدم في الفايربيز
         await updateProfile(userCredential.user, { displayName: name });
         alert("تم إنشاء الحساب بنجاح يا " + name);
     } catch (error) {
@@ -71,7 +69,7 @@ window.loginUser = async () => {
 
 window.logoutUser = async () => { await signOut(auth); };
 
-// دوال النشر (بتسحب اسم المستخدم)
+// دوال النشر
 window.saveDataProject = async () => {
     if(!currentUser) return;
     const title = document.getElementById('data-title').value;
@@ -82,7 +80,7 @@ window.saveDataProject = async () => {
 
     await addDoc(collection(db, "projects"), {
         title, format, date, details, link, 
-        publisherName: currentUser.displayName || "مستخدم", // الاسم بدل الايميل
+        publisherName: currentUser.displayName || "مستخدم", 
         publisherEmail: currentUser.email 
     });
     alert("تم النشر!"); closeModal('create-data-modal');
@@ -141,16 +139,41 @@ function loadData(collectionName, containerId) {
 
 window.deleteItem = async (col, id) => { if(confirm("أكيد هتمسح؟")) await deleteDoc(doc(db, col, id)); };
 
-// البحث اللحظي
+// --- تعديل محرك البحث (عشان يظهر رسالة لا يوجد محتوى) ---
 window.filterSearch = (inputId, listId) => {
     const input = document.getElementById(inputId).value.toLowerCase();
-    const cards = document.getElementById(listId).getElementsByClassName('data-card');
+    const container = document.getElementById(listId);
+    const cards = container.getElementsByClassName('data-card');
+    let hasVisibleCards = false;
+
     for (let i = 0; i < cards.length; i++) {
-        cards[i].style.display = cards[i].innerText.toLowerCase().includes(input) ? "block" : "none";
+        if (cards[i].innerText.toLowerCase().includes(input)) {
+            cards[i].style.display = "block";
+            hasVisibleCards = true; // لقينا داتا
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+
+    // إظهار أو إخفاء رسالة (لا يوجد محتوى)
+    let noMsg = document.getElementById('no-msg-' + listId);
+    if (!hasVisibleCards) {
+        if (!noMsg) {
+            noMsg = document.createElement('div');
+            noMsg.id = 'no-msg-' + listId;
+            noMsg.className = 'glass-panel';
+            noMsg.style.gridColumn = '1 / -1'; // عشان تاخد العرض كله
+            noMsg.style.textAlign = 'center';
+            noMsg.innerHTML = '<h3 style="color: var(--primary-color);"><span class="ar">لا يوجد محتوى مطابق لبحثك 😔</span><span class="en">No content matches your search 😔</span></h3>';
+            container.appendChild(noMsg);
+        } else {
+            noMsg.style.display = 'block';
+        }
+    } else if (noMsg) {
+        noMsg.style.display = 'none'; // لو مسحنا البحث والداتا رجعت، نخفي الرسالة
     }
 };
 
-// واجهة المستخدم (اللغة والموبايل)
 window.toggleLanguage = () => {
     const body = document.body;
     const btn = document.getElementById('lang-btn');
@@ -167,8 +190,21 @@ window.toggleLanguage = () => {
 
 window.toggleMobileMenu = () => { document.getElementById('nav-links').classList.toggle('show'); };
 window.showPage = (id, el) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-links a').forEach(l=>l.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(window.innerWidth < 768) toggleMobileMenu(); };
-window.toggleTheme = () => { document.body.classList.toggle('dark-mode'); };
-// إخفاء النوافذ افتراضياً
+
+// --- تعديل زرار المود (عشان يبدل اللوجو كمان) ---
+window.toggleTheme = () => { 
+    const body = document.body;
+    const logo = document.getElementById('site-logo');
+    body.classList.toggle('dark-mode'); 
+    
+    // تبديل اللوجو بناءً على المود
+    if (body.classList.contains('dark-mode')) {
+        logo.src = 'AM (1).png'; // اللوجو الأبيض
+    } else {
+        logo.src = 'AM.png'; // اللوجو الأسود
+    }
+};
+
 document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
 window.openModal = (id) => { document.getElementById(id).style.display = 'flex'; };
 window.closeModal = (id) => { document.getElementById(id).style.display = 'none'; };
