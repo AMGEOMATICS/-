@@ -1,9 +1,8 @@
 /* إعدادات الألوان الأساسية */
 :root {
-    --bg-color: #f0f2f5;
     --text-color: #111;
     --nav-bg: rgba(255, 255, 255, 0.8);
-    --primary-color: #ff6b00; /* لون برتقالي عصري زي الصورة */
+    --primary-color: #ff6b00; 
     --modal-overlay: rgba(0, 0, 0, 0.4);
     --glass-bg: rgba(255, 255, 255, 0.65);
     --glass-border: rgba(255, 255, 255, 0.3);
@@ -11,27 +10,36 @@
 }
 
 body.dark-mode {
-    --bg-color: #050505; 
+    /* هنا حطينا الصورة وعليها فلتر أسود شفاف بنسبة 85% عشان تليق مع الدارك مود */
+    background: linear-gradient(rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.85)), url('earth.jpg') no-repeat center center fixed;
+    background-size: cover;
+    
     --text-color: #ffffff;
     --nav-bg: rgba(10, 10, 10, 0.8); 
     --primary-color: #ff6b00;
     --modal-overlay: rgba(0, 0, 0, 0.7);
-    --glass-bg: rgba(25, 25, 25, 0.5); /* خلفية زجاجية داكنة */
+    --glass-bg: rgba(25, 25, 25, 0.5); 
     --glass-border: rgba(255, 255, 255, 0.08);
     --input-bg: rgba(255, 255, 255, 0.05);
 }
 
-/* حل مشكلة الموبايل الأساسية */
+/* حل مشكلة الموبايل الأساسية وتظبيط اللايت مود */
 body, html {
     margin: 0;
     padding: 0;
     width: 100%;
     overflow-x: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
-    background-color: var(--bg-color);
+    
+    /* هنا الصورة في اللايت مود وعليها فلتر أبيض شفاف بنسبة 85% */
+    background: linear-gradient(rgba(240, 242, 245, 0.85), rgba(240, 242, 245, 0.85)), url('earth.jpg') no-repeat center center fixed;
+    background-size: cover;
+    
     color: var(--text-color);
-    transition: 0.3s;
+    transition: color 0.3s;
 }
+
+/* --- امسح كلاس .earth-bg القديم لأنه خلاص ملوش لازمة --- */
 
 /* نظام اللغتين */
 .lang-ar .en { display: none !important; }
@@ -54,7 +62,7 @@ nav {
     position: sticky; top: 0; z-index: 100;
 }
 
-nav .logo img { width: 180px; max-height: 60px; object-fit: contain; }
+nav .logo img { width: 180px; max-height: 150px; object-fit: contain; }
 
 .nav-links { display: flex; gap: 25px; list-style: none; padding: 0; }
 .nav-links a { color: var(--text-color); text-decoration: none; font-weight: bold; font-size: 1.1em; transition: 0.3s; }
