@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AM Geomatics</title>
     <link rel="stylesheet" href="style.css">
-    
     <link rel="icon" type="image/png" href="AM (1).png">
 </head>
 <body class="dark-mode lang-ar" dir="rtl"> 
@@ -24,16 +23,16 @@
             <li><a href="#" class="active" onclick="showPage('home', this)"><span class="ar">الرئيسية</span><span class="en">Home</span></a></li>
             <li><a href="#" onclick="showPage('data', this)"><span class="ar">بيانات</span><span class="en">Data</span></a></li>
             <li><a href="#" onclick="showPage('courses', this)"><span class="ar">دورات</span><span class="en">Courses</span></a></li>
+            <li><a href="#" onclick="showPage('programs', this)"><span class="ar">برامج</span><span class="en">Programs</span></a></li>
             <li><a href="#" onclick="showPage('sites', this)"><span class="ar">أهم المواقع</span><span class="en">Top Sites</span></a></li>
             <li><a href="#" onclick="showPage('about', this)"><span class="ar">حول</span><span class="en">About</span></a></li>
             <li><a href="#" onclick="showPage('donate', this)"><span class="ar">تبرع 🧡</span><span class="en">Donate 🧡</span></a></li>
-            
             <li id="admin-nav-link" style="display: none;"><a href="#" onclick="showPage('admin', this)" style="color: #dc3545;">⚙️ <span class="ar">لوحة التحكم</span><span class="en">Admin Panel</span></a></li>
         </ul>
         <div class="nav-actions">
-           <button id="notif-btn" class="icon-btn" onclick="openNotifications()" style="display:none; position:relative; font-size: 1.2em; border:none;">
-                  🔔<span id="notif-badge" style="display:none; position:absolute; top:-2px; right:-2px; background:#dc3545; color:white; border-radius:50%; width:16px; height:16px; font-size:11px; line-height:16px; text-align:center;">!</span>
-           </button>
+            <button id="notif-btn" class="icon-btn" onclick="openNotifications()" style="display:none; position:relative; font-size: 1.2em; border:none;">
+                🔔<span id="notif-badge" style="display:none; position:absolute; top:-2px; right:-2px; background:#dc3545; color:white; border-radius:50%; width:16px; height:16px; font-size:11px; line-height:16px; text-align:center;">!</span>
+            </button>
             
             <button onclick="toggleLanguage()" id="lang-btn" class="icon-btn">🌐 EN</button>
             <button onclick="toggleTheme()" id="theme-btn" class="icon-btn">☀️</button>
@@ -72,6 +71,17 @@
         <div class="content-grid" id="courses-list"></div>
     </section>
 
+    <section id="programs" class="page">
+        <div class="search-container">
+            <h2><span class="ar">برامج</span><span class="en">Programs</span></h2>
+            <div class="search-wrapper">
+                <input type="text" id="search-programs" placeholder="ابحث عن برامج..." class="search-bar" onkeyup="filterSearch('search-programs', 'programs-list')">
+                <button class="create-btn" onclick="openModal('create-program-modal')" style="display:none;"><span class="ar">إضافة برنامج جديد</span><span class="en">Add New Program</span></button>
+            </div>
+        </div>
+        <div class="content-grid" id="programs-list"></div>
+    </section>
+
     <section id="sites" class="page">
         <div class="search-container">
             <h2><span class="ar">محرك بحث المواقع المفيدة</span><span class="en">Useful Sites Search</span></h2>
@@ -86,7 +96,7 @@
     <section id="about" class="page">
         <div class="about-card glass-panel" style="max-width: 800px; margin: auto; margin-top: 5vh; text-align: center;">
             <h2><span class="ar">من نحن</span><span class="en">About Us</span></h2>
-            <p class="ar">السلام عليكم، انا الطالب رِفْعَت هانئ محمد من قسم جيوماتكس القاهرة. صممت الموقع ده علشان نجمع كل الداتا الجغرافية في مكان واحد أمان ومجاني.</p>
+             <p class="ar">السلام عليكم، انا الطالب رِفْعَت هانئ محمد من قسم جيوماتكس القاهرة. صممت الموقع ده علشان نجمع كل الداتا الجغرافية في مكان واحد أمان ومجاني.</p>
              <p class="ar">تقدر تتواصل معانا لو فيه مشاكل و حلها refathany2005@gmail.com</p>
             <p class="en">Hello, I am Refat Hany Mohamed, a Geomatics student at Cairo University. I designed this website to gather all geographic data in one safe, free place.</p>
             <p class="en">You can contact us to resolve any issues via refathany2005@gmail.com</p>
@@ -107,10 +117,16 @@
             <h2 style="color: #dc3545;">⚙️ لوحة تحكم الإدارة (المنشورات المعلقة)</h2>
             <p>أي بوست هيتنشر هيظهرلك هنا الأول عشان تفحصه وتوافق عليه أو ترفضه.</p>
         </div>
+        
         <h3 style="margin-top: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">البيانات والمشاريع</h3>
         <div class="content-grid" id="admin-data-list"></div>
+        
         <h3 style="margin-top: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">الدورات</h3>
         <div class="content-grid" id="admin-courses-list"></div>
+        
+        <h3 style="margin-top: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">البرامج</h3>
+        <div class="content-grid" id="admin-programs-list"></div>
+        
         <h3 style="margin-top: 40px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px;">المواقع</h3>
         <div class="content-grid" id="admin-sites-list"></div>
     </section>
@@ -119,7 +135,7 @@
         <div class="modal-content glass-panel">
             <span class="close" onclick="closeModal('notif-modal')">&times;</span>
             <h2><span class="ar">الإشعارات 🔔</span><span class="en">Notifications 🔔</span></h2>
-         <div id="notif-list" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+            <div id="notif-list" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
                 <p style="text-align:center;">
                     <span class="ar">لا توجد إشعارات حالياً.</span>
                     <span class="en">No notifications currently.</span>
@@ -155,7 +171,7 @@
     <div id="create-data-modal" class="modal">
         <div class="modal-content glass-panel">
             <span class="close" onclick="closeModal('create-data-modal')">&times;</span>
-            <h2>إضافة مشروع جديد</h2>
+            <h2><span class="ar">إضافة مشروع جديد</span><span class="en">Add New Project</span></h2>
             <input type="text" id="data-title" placeholder="عنوان المشروع">
             <select id="data-format">
                 <option value="Shapefile">Shapefile</option>
@@ -166,29 +182,40 @@
             <input type="date" id="data-date">
             <textarea id="data-details" placeholder="تفاصيل المشروع (اختياري)"></textarea>
             <input type="url" id="data-link" placeholder="لينك جوجل درايف للملف">
-            <button class="submit-btn" onclick="saveDataProject()">إرسال للمراجعة</button>
+            <button class="submit-btn" onclick="saveDataProject()"><span class="ar">إرسال للمراجعة</span><span class="en">Submit for Review</span></button>
         </div>
     </div>
 
     <div id="create-course-modal" class="modal">
         <div class="modal-content glass-panel">
             <span class="close" onclick="closeModal('create-course-modal')">&times;</span>
-            <h2>إضافة دورة تعليمية</h2>
+            <h2><span class="ar">إضافة دورة تعليمية</span><span class="en">Add Course</span></h2>
             <input type="text" id="course-title" placeholder="عنوان الدورة">
             <textarea id="course-details" placeholder="تفاصيل الدورة"></textarea>
             <input type="url" id="course-link" placeholder="لينك اليوتيوب فقط">
-            <button class="submit-btn" onclick="saveCourse()">إرسال للمراجعة</button>
+            <button class="submit-btn" onclick="saveCourse()"><span class="ar">إرسال للمراجعة</span><span class="en">Submit for Review</span></button>
+        </div>
+    </div>
+
+    <div id="create-program-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close" onclick="closeModal('create-program-modal')">&times;</span>
+            <h2><span class="ar">إضافة برنامج</span><span class="en">Add Program</span></h2>
+            <input type="text" id="program-title" placeholder="اسم البرنامج (Title)">
+            <textarea id="program-details" placeholder="وصف البرنامج ومميزاته (Details)"></textarea>
+            <input type="url" id="program-link" placeholder="رابط موقع البرنامج أو التحميل (Link)">
+            <button class="submit-btn" onclick="saveProgram()"><span class="ar">إرسال للمراجعة</span><span class="en">Submit for Review</span></button>
         </div>
     </div>
 
     <div id="create-site-modal" class="modal">
         <div class="modal-content glass-panel">
             <span class="close" onclick="closeModal('create-site-modal')">&times;</span>
-            <h2>إضافة موقع مهم</h2>
+            <h2><span class="ar">إضافة موقع مهم</span><span class="en">Add Site</span></h2>
             <input type="text" id="site-title" placeholder="اسم الموقع">
             <textarea id="site-details" placeholder="التفاصيل"></textarea>
             <input type="url" id="site-link" placeholder="رابط الموقع">
-            <button class="submit-btn" onclick="saveSite()">إرسال للمراجعة</button>
+            <button class="submit-btn" onclick="saveSite()"><span class="ar">إرسال للمراجعة</span><span class="en">Submit for Review</span></button>
         </div>
     </div>
 
