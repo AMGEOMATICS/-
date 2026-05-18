@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile, sendEmailVerification, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -23,7 +23,7 @@ onAuthStateChanged(auth, (user) => {
     const logoutBtn = document.getElementById('logout-btn-nav');
     const createBtns = document.querySelectorAll('.create-btn'); 
     
-    if (user) {
+    if (user && user.emailVerified || (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase())) {
         currentUser = user;
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
@@ -40,6 +40,7 @@ onAuthStateChanged(auth, (user) => {
     loadData('sites', 'sites-list');
 });
 
+// --- إنشاء حساب مع تأكيد الإيميل ---
 window.registerUser = async () => {
     const name = document.getElementById('reg-name').value;
     const email = document.getElementById('reg-email').value;
@@ -49,22 +50,53 @@ window.registerUser = async () => {
 
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-        // تحديث وتأكيد اسم المستخدم داخل الحساب فوراً
         await updateProfile(userCredential.user, { displayName: name });
-        alert("تم إنشاء الحساب بنجاح يا " + name);
-        window.location.reload(); // ريفريش سريع عشان نضمن ثبات الاسم في المتصفح
+        
+        // إرسال لينك التفعيل للإيميل
+        await sendEmailVerification(userCredential.user);
+        
+        // تسجيل خروج فوري عشان ميخشش الموقع غير لما يفعل
+        await signOut(auth);
+        
+        alert("تم إنشاء الحساب بنجاح يا " + name + "!\n\nبعتنالك رسالة تفعيل على الإيميل، يرجى الضغط على اللينك لتفعيل حسابك (ممكن تلاقيها في الـ Spam).");
+        switchAuthTab('login'); // نحوله لصفحة الدخول
     } catch (error) {
         alert("خطأ: " + error.message);
     }
 };
 
+// --- تسجيل الدخول مع فحص التفعيل ---
 window.loginUser = async () => {
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-pass').value;
     try {
-        await signInWithEmailAndPassword(auth, email, pass);
+        const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+        const isAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+        
+        // لو الإيميل مش متفعل ومش هو الأدمن، نطرده بره
+        if (!userCredential.user.emailVerified && !isAdmin) {
+            await signOut(auth);
+            alert("حسابك لسه متفعلش! راجع الإيميل بتاعك واضغط على لينك التفعيل الأول (لو مش لاقيه شوف فولدر الـ Spam/Junk).");
+            return;
+        }
+        
     } catch (error) {
         alert("الإيميل أو الباسورد غلط!");
+    }
+};
+
+// --- دالة استرجاع كلمة المرور ---
+window.resetPassword = async () => {
+    const email = document.getElementById('login-email').value;
+    if(!email) {
+        alert("اكتب الإيميل بتاعك في خانة (الايميل) فوق الأول، وبعدين اضغط على (نسيت كلمة السر)!");
+        return;
+    }
+    try {
+        await sendPasswordResetEmail(auth, email);
+        alert("بعتنالك لينك تغيير الباسورد على الإيميل بتاعك، روح شوفه!");
+    } catch (error) {
+        alert("حصل مشكلة، اتأكد إن الإيميل مكتوب صح وإن الحساب متسجل عندنا أصلاً.");
     }
 };
 
@@ -80,7 +112,7 @@ window.saveDataProject = async () => {
 
     await addDoc(collection(db, "projects"), {
         title, format, date, details, link, 
-        publisherName: currentUser.displayName || currentUser.email.split('@')[0], // حل ذكي لو الاسم مش مسجل يقرأ اليوزر نيم من الإيميل
+        publisherName: currentUser.displayName || currentUser.email.split('@')[0], 
         publisherEmail: currentUser.email 
     });
     alert("تم النشر بنجاح!"); closeModal('create-data-modal');
@@ -125,8 +157,6 @@ function loadData(collectionName, containerId) {
             const isAdmin = currentUser && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
             const deleteBtn = isAdmin ? `<button class="delete-btn" onclick="deleteItem('${collectionName}', '${docSnap.id}')">🗑️</button>` : '';
 
-            // --- الحيلة الذكية هنا ---
-            // لو البوست طالع من إيميلك، الكود هيجبر الموقع يعرض refatowner علطول حتى لو البوستات دي قديمة
             let finalPublisher = data.publisherName || data.publisher || "مستخدم الجيوماتكس";
             if (data.publisherEmail && data.publisherEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
                 finalPublisher = "refatowner";
@@ -146,6 +176,7 @@ function loadData(collectionName, containerId) {
         });
     });
 }
+
 window.deleteItem = async (col, id) => { if(confirm("أكيد هتمسح البوست ده؟")) await deleteDoc(doc(db, col, id)); };
 
 window.filterSearch = (inputId, listId) => {
