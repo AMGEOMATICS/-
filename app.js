@@ -125,8 +125,12 @@ function loadData(collectionName, containerId) {
             const isAdmin = currentUser && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
             const deleteBtn = isAdmin ? `<button class="delete-btn" onclick="deleteItem('${collectionName}', '${docSnap.id}')">🗑️</button>` : '';
 
-            // كود العرض المطور لقراءة اسم المستخدم الصريح أو الإيميل كبديل كروت قديمة
-            const finalPublisher = data.publisherName || data.publisher || "مستخدم الجيوماتكس";
+            // --- الحيلة الذكية هنا ---
+            // لو البوست طالع من إيميلك، الكود هيجبر الموقع يعرض refatowner علطول حتى لو البوستات دي قديمة
+            let finalPublisher = data.publisherName || data.publisher || "مستخدم الجيوماتكس";
+            if (data.publisherEmail && data.publisherEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
+                finalPublisher = "refatowner";
+            }
 
             const card = document.createElement('div');
             card.className = 'data-card glass-panel';
@@ -142,7 +146,6 @@ function loadData(collectionName, containerId) {
         });
     });
 }
-
 window.deleteItem = async (col, id) => { if(confirm("أكيد هتمسح البوست ده؟")) await deleteDoc(doc(db, col, id)); };
 
 window.filterSearch = (inputId, listId) => {
