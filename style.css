@@ -25,44 +25,39 @@ body.dark-mode {
 body, html {
     margin: 0; padding: 0; width: 100%; overflow-x: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, sans-serif;
-    background-color: var(--bg-color); color: var(--text-color);
-    transition: background-color 0.3s, color 0.3s;
+    /* السر كله هنا: خلينا الـ body شفاف عشان ميعميش الصورة اللي تحته */
+    background-color: transparent; 
+    color: var(--text-color);
+    transition: color 0.3s;
 }
 
-.lang-ar .en { display: none !important; }
-.lang-en .ar { display: none !important; }
-
-/* طبقة خلفية كوكب الأرض بالبلور المطور */
-/* طبقة خلفية كوكب الأرض المثبتة للموبايل والكمبيوتر */
+/* طبقة خلفية كوكب الأرض */
 .earth-bg {
     position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%;  /* استخدمنا % عشان الموبايل ميقصش الخلفية */
-    height: 100%; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
     background-image: url('earth.jpg'); 
     background-size: cover; 
     background-position: center;
-    background-attachment: fixed; /* الأمر ده بيسمر الصورة في الشاشة */
-    filter: blur(6px); -webkit-filter: blur(6px); 
-    transform: scale(1.1); /* كبرناها سيكا عشان أطراف البلور متعملش حواف بيضاء */
-    opacity: 0.6; /* درجة سطوع ممتازة */
+    background-attachment: fixed;
+    filter: blur(5px); -webkit-filter: blur(5px); 
+    transform: scale(1.05);
+    opacity: 0.8; /* وضوح الصورة */
     z-index: -2; 
     pointer-events: none;
 }
 
-/* طبقة تعتيم زجاجية هادية فوق الصورة */
+/* طبقة اللون المدمجة (هتاخد لون اللايت أو الدارك تلقائي بفضل المتغيرات) */
 .dark-overlay {
     position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(11, 14, 20, 0.65); 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    background-color: var(--bg-color); /* نقلنا لون الخلفية هنا */
+    opacity: 0.85; /* درجة الشفافية اللي هتخلي الصورة تبان من تحت اللون */
     z-index: -1; 
     pointer-events: none;
+    transition: background-color 0.3s;
 }
-
 /* شريط التنقل المتناسق بالخط الزجاجي الجديد */
 nav {
     display: flex; justify-content: space-between; align-items: center;
