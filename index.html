@@ -8,6 +8,7 @@
 </head>
 <body class="dark-mode lang-ar" dir="rtl"> 
 
+    <div class="earth-bg"></div>
 
     <nav>
         <div class="logo">
@@ -48,11 +49,11 @@
     <section id="home" class="page active">
         <div class="hero-content">
             <h1>
-                <span class="ar">بتدور علي شيب فايل لمنطقة الدراسة؟</span>
-                <span class="en">Looking for a Shapefile for your study area?</span>
+                <span class="ar">بتدور علي شيب فايل<br>لمنطقة الدراسة؟</span>
+                <span class="en">Looking for a Shapefile<br>for your study area?</span>
             </h1>
             <p>
-                <span class="ar">مستني ايه! ابدا هنا ومجاني 100%</span>
+                <span class="ar">مستني ايه! ابدأ هنا ومجاني 100%</span>
                 <span class="en">What are you waiting for? Start here, 100% Free!</span>
             </p>
             <button class="start-btn" onclick="openModal('login-modal')">Start</button>
@@ -130,8 +131,8 @@
     <div id="create-data-modal" class="modal">
         <div class="modal-content glass-panel">
             <span class="close" onclick="closeModal('create-data-modal')">&times;</span>
-            <h2 class="ar">إضافة مشروع جديد</h2><h2 class="en">Add New Project</h2>
-            <input type="text" id="data-title" placeholder="عنوان المشروع | Title">
+            <h2>إضافة مشروع جديد</h2>
+            <input type="text" id="data-title" placeholder="عنوان المشروع">
             <select id="data-format">
                 <option value="Shapefile">Shapefile</option>
                 <option value="Geodatabase">Geodatabase</option>
@@ -139,9 +140,9 @@
                 <option value="KML/KMZ">KML / KMZ</option>
             </select>
             <input type="date" id="data-date">
-            <textarea id="data-details" placeholder="تفاصيل (اختياري) | Details"></textarea>
-            <input type="url" id="data-link" placeholder="لينك جوجل درايف | Google Drive Link">
-            <button class="submit-btn" onclick="saveDataProject()">نشر | Publish</button>
+            <textarea id="data-details" placeholder="تفاصيل المشروع (اختياري)"></textarea>
+            <input type="url" id="data-link" placeholder="لينك جوجل درايف للملف">
+            <button class="submit-btn" onclick="saveDataProject()">نشر</button>
         </div>
     </div>
 
