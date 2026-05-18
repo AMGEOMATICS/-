@@ -18,6 +18,9 @@ const db = getFirestore(app);
 const ADMIN_EMAIL = "refathany2005@gmail.com"; 
 let currentUser = null;
 
+// دالة صغيرة بتعرفنا الموقع إنجليزي ولا لأ
+const isEn = () => document.body.classList.contains('lang-en');
+
 onAuthStateChanged(auth, (user) => {
     const loginBtn = document.getElementById('login-btn-nav');
     const logoutBtn = document.getElementById('logout-btn-nav');
@@ -29,11 +32,11 @@ onAuthStateChanged(auth, (user) => {
         currentUser = user;
         loginBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
-        notifBtn.style.display = 'inline-block'; // إظهار الجرس
+        notifBtn.style.display = 'inline-block'; 
         createBtns.forEach(btn => btn.style.display = 'inline-block'); 
         
         if(user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) {
-            adminLink.style.display = 'inline-block'; // إظهار لوحة التحكم للأدمن
+            adminLink.style.display = 'inline-block'; 
         }
         
         closeModal('login-modal');
@@ -48,23 +51,32 @@ onAuthStateChanged(auth, (user) => {
     loadAllData();
 });
 
-// دوال التسجيل والدخول
-window.registerUser = async () => { /* نفس الكود السابق */ 
+// --- دوال التسجيل والدخول (مترجمة) ---
+window.registerUser = async () => { 
     const name = document.getElementById('reg-name').value;
     const email = document.getElementById('reg-email').value;
     const pass = document.getElementById('reg-pass').value;
-    if(!name) return alert("اكتب اسم المستخدم الأول!");
+    
+    if(!name) return alert(isEn() ? "Please enter a username first!" : "اكتب اسم المستخدم الأول!");
+    
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
         await updateProfile(userCredential.user, { displayName: name });
         await sendEmailVerification(userCredential.user);
         await signOut(auth);
-        alert("تم إنشاء الحساب بنجاح يا " + name + "!\n\nبعتنالك رسالة تفعيل على الإيميل.");
+        
+        // الرسالة الذكية للغتين
+        alert(isEn() 
+            ? `Account created successfully, ${name}!\n\nWe have sent an activation link to your email.` 
+            : `تم إنشاء الحساب بنجاح يا ${name}!\n\nبعتنالك رسالة تفعيل على الإيميل.`);
+            
         switchAuthTab('login');
-    } catch (error) { alert("خطأ: " + error.message); }
+    } catch (error) { 
+        alert(isEn() ? "Error: " + error.message : "خطأ: " + error.message); 
+    }
 };
 
-window.loginUser = async () => { /* نفس الكود السابق */
+window.loginUser = async () => { 
     const email = document.getElementById('login-email').value;
     const pass = document.getElementById('login-pass').value;
     try {
@@ -72,22 +84,34 @@ window.loginUser = async () => { /* نفس الكود السابق */
         const isAdmin = email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
         if (!userCredential.user.emailVerified && !isAdmin) {
             await signOut(auth);
-            alert("حسابك لسه متفعلش! راجع الإيميل بتاعك.");
+            alert(isEn() 
+                ? "Your account is not activated yet! Please check your email." 
+                : "حسابك لسه متفعلش! راجع الإيميل بتاعك.");
             return;
         }
-    } catch (error) { alert("الإيميل أو الباسورد غلط!"); }
+    } catch (error) { 
+        alert(isEn() ? "Incorrect email or password!" : "الإيميل أو الباسورد غلط!"); 
+    }
 };
 
-window.resetPassword = async () => { /* نفس الكود السابق */
+window.resetPassword = async () => { 
     const email = document.getElementById('login-email').value;
-    if(!email) { alert("اكتب الإيميل في خانة الدخول الأول!"); return; }
-    try { await sendPasswordResetEmail(auth, email); alert("بعتنالك لينك تغيير الباسورد!"); } 
-    catch (error) { alert("حصل مشكلة، اتأكد إن الإيميل متسجل."); }
+    if(!email) { 
+        alert(isEn() ? "Please enter your email in the login field first!" : "اكتب الإيميل في خانة الدخول الأول!"); 
+        return; 
+    }
+    try { 
+        await sendPasswordResetEmail(auth, email); 
+        alert(isEn() ? "Password reset link sent to your email!" : "بعتنالك لينك تغيير الباسورد!"); 
+    } 
+    catch (error) { 
+        alert(isEn() ? "An error occurred, make sure the email is registered." : "حصل مشكلة، اتأكد إن الإيميل متسجل."); 
+    }
 };
 
 window.logoutUser = async () => { await signOut(auth); window.location.reload(); };
 
-// --- دوال النشر (بتضيف حالة قيد المراجعة pending) ---
+// --- دوال النشر (مترجمة) ---
 window.saveDataProject = async () => {
     if(!currentUser) return;
     await addDoc(collection(db, "projects"), {
@@ -97,9 +121,10 @@ window.saveDataProject = async () => {
         link: document.getElementById('data-link').value,
         publisherName: currentUser.displayName || currentUser.email.split('@')[0], 
         publisherEmail: currentUser.email,
-        status: 'pending' // قيد المراجعة
+        status: 'pending'
     });
-    alert("تم إرسال المنشور للمراجعة! هيظهر للناس أول ما الأدمن يوافق عليه."); closeModal('create-data-modal');
+    alert(isEn() ? "Submitted for review! It will be public once approved." : "تم إرسال المنشور للمراجعة! هيظهر للناس أول ما الأدمن يوافق عليه."); 
+    closeModal('create-data-modal');
 };
 
 window.saveCourse = async () => {
@@ -112,7 +137,8 @@ window.saveCourse = async () => {
         publisherEmail: currentUser.email,
         status: 'pending'
     });
-    alert("تم إرسال الدورة للمراجعة!"); closeModal('create-course-modal');
+    alert(isEn() ? "Course submitted for review!" : "تم إرسال الدورة للمراجعة!"); 
+    closeModal('create-course-modal');
 };
 
 window.saveSite = async () => {
@@ -125,17 +151,18 @@ window.saveSite = async () => {
         publisherEmail: currentUser.email,
         status: 'pending'
     });
-    alert("تم إرسال الموقع للمراجعة!"); closeModal('create-site-modal');
+    alert(isEn() ? "Site submitted for review!" : "تم إرسال الموقع للمراجعة!"); 
+    closeModal('create-site-modal');
 };
 
-// --- الماكينة الأساسية لجلب الداتا وفرزها (مراجعة/إشعارات/عام) ---
+// --- الماكينة الأساسية ---
 function loadAllData() {
     listenCollection('projects', 'data-list', 'admin-data-list');
     listenCollection('courses', 'courses-list', 'admin-courses-list');
     listenCollection('sites', 'sites-list', 'admin-sites-list');
 }
 
-let userNotifications = []; // مصفوفة الإشعارات
+let userNotifications = []; 
 
 function listenCollection(colName, publicId, adminId) {
     onSnapshot(collection(db, colName), (snapshot) => {
@@ -147,34 +174,30 @@ function listenCollection(colName, publicId, adminId) {
         snapshot.forEach((docSnap) => {
             const data = docSnap.data();
             const id = docSnap.id;
-            const status = data.status || 'approved'; // القديم بيتعامل كأنه متوافق عليه
+            const status = data.status || 'approved'; 
             const isOwner = currentUser && currentUser.email === data.publisherEmail;
             const isAdmin = currentUser && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
 
             let finalPublisher = data.publisherName || "مستخدم الجيوماتكس";
             if (data.publisherEmail && data.publisherEmail.toLowerCase() === ADMIN_EMAIL.toLowerCase()) finalPublisher = "refatowner";
 
-            // 1. نظام الإشعارات
             if (isOwner && data.status && (status === 'approved' || status === 'rejected')) {
-                // بنمنع التكرار
                 if(!userNotifications.some(n => n.id === id)) {
                     userNotifications.push({ id, title: data.title, status, reason: data.rejectionReason });
                     renderNotifications();
                 }
             }
 
-            // تصميم الكارت العام
+            // ضفنا كلاس en و ar عشان كلمة "الناشر" أو "Publisher" تتغير
             const cardHTML = `
                 <h3>${data.title}</h3>
-                ${data.format ? `<p><strong>الصيغة:</strong> ${data.format}</p>` : ''}
+                ${data.format ? `<p><strong><span class="ar">الصيغة:</span><span class="en">Format:</span></strong> ${data.format}</p>` : ''}
                 <p>${data.details || ''}</p>
-                <p><small style="color:var(--primary-color); font-weight:bold;">الناشر: ${finalPublisher}</small></p>
-                <a href="${data.link}" target="_blank" style="display:block; margin-top:10px; color:#fff; background:var(--primary-color); text-align:center; padding:8px; border-radius:8px; text-decoration:none;">فتح الرابط</a>
+                <p><small style="color:var(--primary-color); font-weight:bold;"><span class="ar">الناشر:</span><span class="en">Publisher:</span> ${finalPublisher}</small></p>
+                <a href="${data.link}" target="_blank" style="display:block; margin-top:10px; color:#fff; background:var(--primary-color); text-align:center; padding:8px; border-radius:8px; text-decoration:none;"><span class="ar">فتح الرابط</span><span class="en">Open Link</span></a>
             `;
 
-            // 2. توزيع الكروت
             if (status === 'pending') {
-                // يظهر في لوحة التحكم للأدمن بس
                 if (isAdmin && adminCont) {
                     const adminCard = document.createElement('div');
                     adminCard.className = 'data-card glass-panel';
@@ -187,7 +210,6 @@ function listenCollection(colName, publicId, adminId) {
                     adminCont.appendChild(adminCard);
                 }
             } else if (status === 'approved') {
-                // يظهر للعامة
                 if (publicCont) {
                     const publicCard = document.createElement('div');
                     publicCard.className = 'data-card glass-panel';
@@ -200,41 +222,46 @@ function listenCollection(colName, publicId, adminId) {
     });
 }
 
-// --- دوال التحكم للأدمن ---
 window.approvePost = async (col, id) => {
-    if(confirm("موافق تنشر البوست ده للناس؟")) await updateDoc(doc(db, col, id), { status: 'approved' });
+    if(confirm(isEn() ? "Approve this post?" : "موافق تنشر البوست ده للناس؟")) await updateDoc(doc(db, col, id), { status: 'approved' });
 };
 
 window.rejectPost = async (col, id) => {
-    const reason = prompt("اكتب سبب الرفض عشان يظهر للمستخدم في الإشعارات:");
+    const reason = prompt(isEn() ? "Enter reason for rejection:" : "اكتب سبب الرفض عشان يظهر للمستخدم في الإشعارات:");
     if(reason) await updateDoc(doc(db, col, id), { status: 'rejected', rejectionReason: reason });
 };
 
-window.deleteItem = async (col, id) => { if(confirm("أكيد هتمسح البوست؟")) await deleteDoc(doc(db, col, id)); };
+window.deleteItem = async (col, id) => { if(confirm(isEn() ? "Are you sure you want to delete this?" : "أكيد هتمسح البوست ده؟")) await deleteDoc(doc(db, col, id)); };
+let userNotifications = []; 
+let lastSeenNotifCount = 0; // المتغير الجديد اللي بيحفظ عدد الإشعارات اللي إنت شفتها
 
-// --- معالجة الإشعارات ---
-// --- معالجة الإشعارات (متوافقة مع اللغتين) ---
+// الدالة الجديدة اللي بتفتح الإشعارات وتطفي اللمبة الحمراء
+window.openNotifications = () => {
+    lastSeenNotifCount = userNotifications.length; // بنسجل إنك شفت كل الإشعارات الحالية
+    document.getElementById('notif-badge').style.display = 'none'; // بنخفي النقطة الحمراء
+    openModal('notif-modal'); // بنفتح النافذة
+};
+
+// تحديث دالة عرض الإشعارات عشان متنورش غير لو في جديد
 function renderNotifications() {
     const notifList = document.getElementById('notif-list');
     const badge = document.getElementById('notif-badge');
     
     if(userNotifications.length > 0) {
-        badge.style.display = 'block';
+        // لو عدد الإشعارات زاد عن اللي إنت شفته قبل كده، نور اللمبة
+        if (userNotifications.length > lastSeenNotifCount) {
+            badge.style.display = 'block';
+        }
+        
         notifList.innerHTML = '';
         userNotifications.forEach(n => {
             const bgClass = n.status === 'approved' ? 'approved' : 'rejected';
-            
-            // الرسالة بالعربي
             const msgAr = n.status === 'approved' 
                 ? `مبروك! تم الموافقة على منشورك "<strong>${n.title}</strong>" وهو الآن متاح للجميع.` 
                 : `تم رفض منشورك "<strong>${n.title}</strong>". <br><small style="color:#dc3545;">السبب: ${n.reason}</small>`;
-                
-            // الرسالة بالإنجليزي
             const msgEn = n.status === 'approved' 
                 ? `Congratulations! Your post "<strong>${n.title}</strong>" has been approved and is now public.` 
                 : `Your post "<strong>${n.title}</strong>" was rejected. <br><small style="color:#dc3545;">Reason: ${n.reason}</small>`;
-
-            // دمج اللغتين في الكارت
             notifList.innerHTML += `
                 <div class="notif-item ${bgClass}">
                     <span class="ar">${msgAr}</span>
@@ -243,7 +270,6 @@ function renderNotifications() {
             `;
         });
     } else {
-        // في حالة مسح الإشعارات أو عدم وجودها
         notifList.innerHTML = `
             <p style="text-align:center;">
                 <span class="ar">لا توجد إشعارات حالياً.</span>
@@ -252,15 +278,49 @@ function renderNotifications() {
         `;
     }
 }
-// البحث
+    } else {
+        notifList.innerHTML = `
+            <p style="text-align:center;">
+                <span class="ar">لا توجد إشعارات حالياً.</span>
+                <span class="en">No notifications currently.</span>
+            </p>
+        `;
+    }
+}
+
 window.filterSearch = (inputId, listId) => {
     const input = document.getElementById(inputId).value.toLowerCase();
     const container = document.getElementById(listId);
     const cards = container.getElementsByClassName('data-card');
-    for (let i = 0; i < cards.length; i++) cards[i].style.display = cards[i].innerText.toLowerCase().includes(input) ? "block" : "none";
+    let hasVisibleCards = false;
+
+    for (let i = 0; i < cards.length; i++) {
+        if (cards[i].innerText.toLowerCase().includes(input)) {
+            cards[i].style.display = "block";
+            hasVisibleCards = true; 
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+
+    let noMsg = document.getElementById('no-msg-' + listId);
+    if (!hasVisibleCards) {
+        if (!noMsg) {
+            noMsg = document.createElement('div');
+            noMsg.id = 'no-msg-' + listId;
+            noMsg.className = 'glass-panel';
+            noMsg.style.gridColumn = '1 / -1';
+            noMsg.style.textAlign = 'center';
+            noMsg.innerHTML = '<h3 style="color: var(--primary-color);"><span class="ar">لا يوجد محتوى مطابق لبحثك 😔</span><span class="en">No content matches your search 😔</span></h3>';
+            container.appendChild(noMsg);
+        } else {
+            noMsg.style.display = 'block';
+        }
+    } else if (noMsg) {
+        noMsg.style.display = 'none';
+    }
 };
 
-// حل مشكلة اللغة في الـ Placeholder
 window.toggleLanguage = () => {
     const body = document.body;
     const btn = document.getElementById('lang-btn');
@@ -288,19 +348,18 @@ window.toggleLanguage = () => {
 window.toggleMobileMenu = () => { document.getElementById('nav-links').classList.toggle('show'); };
 window.showPage = (id, el) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-links a').forEach(l=>l.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(window.innerWidth < 900) toggleMobileMenu(); };
 window.toggleTheme = () => { const body = document.body; const logo = document.getElementById('site-logo'); body.classList.toggle('dark-mode'); logo.src = body.classList.contains('dark-mode') ? 'AM (1).png' : 'AM.png'; };
-document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
-window.openModal = (id) => { document.getElementById(id).style.display = 'flex'; };
 
-// دالة زرار Start الذكية
+// زرار البداية الذكي
 window.handleStartBtn = () => {
     if (currentUser) {
-        // لو اليوزر مسجل دخول، هنجيب لينك صفحة "البيانات" من القايمة وننقله عليها
         const dataNavLink = document.querySelectorAll('.nav-links a')[1]; 
         showPage('data', dataNavLink);
     } else {
-        // لو مش مسجل، نفتحله نافذة تسجيل الدخول
         openModal('login-modal');
     }
 };
+
+document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
+window.openModal = (id) => { document.getElementById(id).style.display = 'flex'; };
 window.closeModal = (id) => { document.getElementById(id).style.display = 'none'; };
 window.switchAuthTab = (t) => { document.getElementById('login-form').style.display = t==='login'?'flex':'none'; document.getElementById('register-form').style.display = t==='register'?'flex':'none'; document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active')); event.target.classList.add('active'); };
