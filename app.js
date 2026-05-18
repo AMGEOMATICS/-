@@ -1,9 +1,7 @@
-// استيراد أدوات الفايربيز
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// إعدادات الفايربيز بتاعتك
 const firebaseConfig = {
   apiKey: "AIzaSyCmGYoMqvaTDafiHb7q9Vk7vE4n1w2tWBI",
   authDomain: "am-a-geo.firebaseapp.com",
@@ -18,11 +16,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// إيميل الأدمن (إيميلك إنت بس اللي هيقدر يمسح)
-const ADMIN_EMAIL = "Refathany2005@gmail.com";
+const ADMIN_EMAIL = "refathany2005@gmail.com"; // خليناها حروف صغيرة كمرجع
 let currentUser = null;
 
-// مراقبة حالة تسجيل الدخول
 onAuthStateChanged(auth, (user) => {
     const loginBtn = document.getElementById('login-btn-nav');
     const logoutBtn = document.getElementById('logout-btn-nav');
@@ -37,13 +33,11 @@ onAuthStateChanged(auth, (user) => {
         loginBtn.style.display = 'block';
         logoutBtn.style.display = 'none';
     }
-    // تحديث عرض البيانات عشان زرار المسح يظهر أو يختفي
     loadData('projects', 'data-list');
     loadData('courses', 'courses-list');
     loadData('sites', 'sites-list');
 });
 
-// دوال التسجيل والدخول
 window.registerUser = async () => {
     const email = document.getElementById('reg-email').value;
     const pass = document.getElementById('reg-pass').value;
@@ -71,10 +65,8 @@ window.logoutUser = async () => {
     alert("تم تسجيل الخروج");
 };
 
-// رفع البيانات الجغرافية
 window.saveDataProject = async () => {
     if(!currentUser) return alert("لازم تسجل دخول الأول عشان تنشر بيانات!");
-    
     const title = document.getElementById('data-title').value;
     const format = document.getElementById('data-format').value;
     const date = document.getElementById('data-date').value;
@@ -89,17 +81,14 @@ window.saveDataProject = async () => {
     errorMsg.style.display = 'none';
 
     await addDoc(collection(db, "projects"), {
-        title, format, date, details, link,
-        publisher: currentUser.email
+        title, format, date, details, link, publisher: currentUser.email
     });
     alert("تم نشر المشروع!");
     closeModal('create-data-modal');
 };
 
-// رفع الدورات
 window.saveCourse = async () => {
     if(!currentUser) return alert("لازم تسجل دخول الأول!");
-    
     const title = document.getElementById('course-title').value;
     const details = document.getElementById('course-details').value;
     const link = document.getElementById('course-link').value;
@@ -112,30 +101,25 @@ window.saveCourse = async () => {
     errorMsg.style.display = 'none';
 
     await addDoc(collection(db, "courses"), {
-        title, details, link,
-        publisher: currentUser.email
+        title, details, link, publisher: currentUser.email
     });
     alert("تم نشر الدورة!");
     closeModal('create-course-modal');
 };
 
-// رفع المواقع
 window.saveSite = async () => {
     if(!currentUser) return alert("لازم تسجل دخول الأول!");
-    
     const title = document.getElementById('site-title').value;
     const details = document.getElementById('site-details').value;
     const link = document.getElementById('site-link').value;
 
     await addDoc(collection(db, "sites"), {
-        title, details, link,
-        publisher: currentUser.email
+        title, details, link, publisher: currentUser.email
     });
     alert("تم نشر الموقع!");
     closeModal('create-site-modal');
 };
 
-// دالة لجلب البيانات وعرضها بشكل لحظي
 function loadData(collectionName, containerId) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -146,12 +130,10 @@ function loadData(collectionName, containerId) {
             const data = docSnap.data();
             const id = docSnap.id;
             
-            // التحقق من الأدمن لإظهار زرار المسح
-            const deleteBtnHtml = (currentUser && currentUser.email === ADMIN_EMAIL) 
-                ? `<button class="delete-btn" onclick="deleteItem('${collectionName}', '${id}')">مسح 🗑️</button>` 
-                : '';
+            // هنا ظبطنا المشكلة: بنحول الإيميلين لحروف صغيرة عشان يتطابقوا دايماً
+            const isAdmin = currentUser && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+            const deleteBtnHtml = isAdmin ? `<button class="delete-btn" onclick="deleteItem('${collectionName}', '${id}')">مسح 🗑️</button>` : '';
 
-            // تصميم الكارت
             const card = document.createElement('div');
             card.className = 'data-card';
             card.innerHTML = `
@@ -168,14 +150,28 @@ function loadData(collectionName, containerId) {
     });
 }
 
-// دالة المسح الخاصة بالأدمن
 window.deleteItem = async (collectionName, id) => {
     if(confirm("متأكد إنك عايز تمسح البوست ده؟")) {
         await deleteDoc(doc(db, collectionName, id));
     }
 };
 
-// أساسيات الواجهة (UI)
+// --- دالة محرك البحث اللحظي (الاقتراحات) ---
+window.filterSearch = (inputId, listId) => {
+    const input = document.getElementById(inputId).value.toLowerCase();
+    const cards = document.getElementById(listId).getElementsByClassName('data-card');
+
+    // بيلف على كل الكروت ويخفي اللي مش مطابق لكلامك
+    for (let i = 0; i < cards.length; i++) {
+        const cardText = cards[i].innerText.toLowerCase();
+        if (cardText.includes(input)) {
+            cards[i].style.display = "block";
+        } else {
+            cards[i].style.display = "none";
+        }
+    }
+};
+
 window.showPage = (pageId, linkElement) => {
     document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
     document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
