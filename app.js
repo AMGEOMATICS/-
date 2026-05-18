@@ -49,8 +49,10 @@ window.registerUser = async () => {
 
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+        // تحديث وتأكيد اسم المستخدم داخل الحساب فوراً
         await updateProfile(userCredential.user, { displayName: name });
         alert("تم إنشاء الحساب بنجاح يا " + name);
+        window.location.reload(); // ريفريش سريع عشان نضمن ثبات الاسم في المتصفح
     } catch (error) {
         alert("خطأ: " + error.message);
     }
@@ -78,10 +80,10 @@ window.saveDataProject = async () => {
 
     await addDoc(collection(db, "projects"), {
         title, format, date, details, link, 
-        publisherName: currentUser.displayName || "مستخدم مجهول", // هنا حفظ اسم اليوزر في الفايربيز
+        publisherName: currentUser.displayName || currentUser.email.split('@')[0], // حل ذكي لو الاسم مش مسجل يقرأ اليوزر نيم من الإيميل
         publisherEmail: currentUser.email 
     });
-    alert("تم النشر!"); closeModal('create-data-modal');
+    alert("تم النشر بنجاح!"); closeModal('create-data-modal');
 };
 
 window.saveCourse = async () => {
@@ -91,9 +93,11 @@ window.saveCourse = async () => {
     const link = document.getElementById('course-link').value;
 
     await addDoc(collection(db, "courses"), {
-        title, details, link, publisherName: currentUser.displayName || "مستخدم مجهول", publisherEmail: currentUser.email
+        title, details, link, 
+        publisherName: currentUser.displayName || currentUser.email.split('@')[0], 
+        publisherEmail: currentUser.email
     });
-    alert("تم النشر!"); closeModal('create-course-modal');
+    alert("تم النشر بنجاح!"); closeModal('create-course-modal');
 };
 
 window.saveSite = async () => {
@@ -103,9 +107,11 @@ window.saveSite = async () => {
     const link = document.getElementById('site-link').value;
 
     await addDoc(collection(db, "sites"), {
-        title, details, link, publisherName: currentUser.displayName || "مستخدم مجهول", publisherEmail: currentUser.email
+        title, details, link, 
+        publisherName: currentUser.displayName || currentUser.email.split('@')[0], 
+        publisherEmail: currentUser.email
     });
-    alert("تم النشر!"); closeModal('create-site-modal');
+    alert("تم النشر بنجاح!"); closeModal('create-site-modal');
 };
 
 function loadData(collectionName, containerId) {
@@ -119,6 +125,9 @@ function loadData(collectionName, containerId) {
             const isAdmin = currentUser && currentUser.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
             const deleteBtn = isAdmin ? `<button class="delete-btn" onclick="deleteItem('${collectionName}', '${docSnap.id}')">🗑️</button>` : '';
 
+            // كود العرض المطور لقراءة اسم المستخدم الصريح أو الإيميل كبديل كروت قديمة
+            const finalPublisher = data.publisherName || data.publisher || "مستخدم الجيوماتكس";
+
             const card = document.createElement('div');
             card.className = 'data-card glass-panel';
             card.innerHTML = `
@@ -126,7 +135,7 @@ function loadData(collectionName, containerId) {
                 <h3>${data.title}</h3>
                 ${data.format ? `<p><strong>الصيغة:</strong> ${data.format}</p>` : ''}
                 <p>${data.details || ''}</p>
-                <p><small style="color:var(--primary-color); font-weight:bold;">الناشر: ${data.publisherName}</small></p>
+                <p><small style="color:var(--primary-color); font-weight:bold;">الناشر: ${finalPublisher}</small></p>
                 <a href="${data.link}" target="_blank" style="display:block; margin-top:10px; color:#fff; background:var(--primary-color); text-align:center; padding:8px; border-radius:8px; text-decoration:none;">فتح الرابط</a>
             `;
             container.appendChild(card);
