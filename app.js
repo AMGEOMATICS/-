@@ -213,6 +213,7 @@ window.rejectPost = async (col, id) => {
 window.deleteItem = async (col, id) => { if(confirm("أكيد هتمسح البوست؟")) await deleteDoc(doc(db, col, id)); };
 
 // --- معالجة الإشعارات ---
+// --- معالجة الإشعارات (متوافقة مع اللغتين) ---
 function renderNotifications() {
     const notifList = document.getElementById('notif-list');
     const badge = document.getElementById('notif-badge');
@@ -222,14 +223,35 @@ function renderNotifications() {
         notifList.innerHTML = '';
         userNotifications.forEach(n => {
             const bgClass = n.status === 'approved' ? 'approved' : 'rejected';
-            const msg = n.status === 'approved' 
+            
+            // الرسالة بالعربي
+            const msgAr = n.status === 'approved' 
                 ? `مبروك! تم الموافقة على منشورك "<strong>${n.title}</strong>" وهو الآن متاح للجميع.` 
                 : `تم رفض منشورك "<strong>${n.title}</strong>". <br><small style="color:#dc3545;">السبب: ${n.reason}</small>`;
-            notifList.innerHTML += `<div class="notif-item ${bgClass}">${msg}</div>`;
+                
+            // الرسالة بالإنجليزي
+            const msgEn = n.status === 'approved' 
+                ? `Congratulations! Your post "<strong>${n.title}</strong>" has been approved and is now public.` 
+                : `Your post "<strong>${n.title}</strong>" was rejected. <br><small style="color:#dc3545;">Reason: ${n.reason}</small>`;
+
+            // دمج اللغتين في الكارت
+            notifList.innerHTML += `
+                <div class="notif-item ${bgClass}">
+                    <span class="ar">${msgAr}</span>
+                    <span class="en">${msgEn}</span>
+                </div>
+            `;
         });
+    } else {
+        // في حالة مسح الإشعارات أو عدم وجودها
+        notifList.innerHTML = `
+            <p style="text-align:center;">
+                <span class="ar">لا توجد إشعارات حالياً.</span>
+                <span class="en">No notifications currently.</span>
+            </p>
+        `;
     }
 }
-
 // البحث
 window.filterSearch = (inputId, listId) => {
     const input = document.getElementById(inputId).value.toLowerCase();
