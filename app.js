@@ -22,7 +22,8 @@ const isEn = () => document.body.classList.contains('lang-en');
 
 onAuthStateChanged(auth, (user) => {
     const loginBtn = document.getElementById('login-btn-nav');
-    const logoutBtn = document.getElementById('logout-btn-nav');
+    const userInfo = document.getElementById('user-info');
+    const displayUsername = document.getElementById('display-username');
     const createBtns = document.querySelectorAll('.create-btn'); 
     const notifBtn = document.getElementById('notif-btn');
     const adminLink = document.getElementById('admin-nav-link');
@@ -30,7 +31,9 @@ onAuthStateChanged(auth, (user) => {
     if (user && user.emailVerified || (user && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase())) {
         currentUser = user;
         loginBtn.style.display = 'none';
-        logoutBtn.style.display = 'inline-block';
+        userInfo.style.display = 'flex'; // إظهار اسم المستخدم وزرار الخروج
+        displayUsername.innerText = user.displayName || user.email.split('@')[0];
+        
         notifBtn.style.display = 'inline-block'; 
         createBtns.forEach(btn => btn.style.display = 'inline-block'); 
         
@@ -42,7 +45,7 @@ onAuthStateChanged(auth, (user) => {
     } else {
         currentUser = null;
         loginBtn.style.display = 'inline-block';
-        logoutBtn.style.display = 'none';
+        userInfo.style.display = 'none'; // إخفاء بيانات المستخدم
         notifBtn.style.display = 'none';
         adminLink.style.display = 'none';
         createBtns.forEach(btn => btn.style.display = 'none'); 
@@ -50,7 +53,7 @@ onAuthStateChanged(auth, (user) => {
     loadAllData();
 });
 
-// دوال التسجيل والدخول
+// --- دوال التسجيل والدخول ---
 window.registerUser = async () => { 
     const name = document.getElementById('reg-name').value;
     const email = document.getElementById('reg-email').value;
@@ -109,12 +112,13 @@ window.resetPassword = async () => {
 
 window.logoutUser = async () => { await signOut(auth); window.location.reload(); };
 
-// دوال النشر والإضافة
+// --- دوال النشر والإضافة للمراجعة ---
 window.saveDataProject = async () => {
     if(!currentUser) return;
     await addDoc(collection(db, "projects"), {
         title: document.getElementById('data-title').value,
         format: document.getElementById('data-format').value,
+        date: document.getElementById('data-date').value,
         details: document.getElementById('data-details').value,
         link: document.getElementById('data-link').value,
         publisherName: currentUser.displayName || currentUser.email.split('@')[0], 
@@ -167,7 +171,7 @@ window.saveSite = async () => {
     closeModal('create-site-modal');
 };
 
-// جلب وعرض البيانات
+// --- جلب وعرض البيانات والتصميم الجديد للكروت ---
 function loadAllData() {
     listenCollection('projects', 'data-list', 'admin-data-list');
     listenCollection('courses', 'courses-list', 'admin-courses-list');
@@ -208,12 +212,26 @@ function listenCollection(colName, publicId, adminId) {
                 }
             }
 
+            // تصميم الكارت الجديد بالتقييمات والتعليقات
             const cardHTML = `
                 <h3>${data.title}</h3>
                 ${data.format ? `<p><strong><span class="ar">الصيغة:</span><span class="en">Format:</span></strong> ${data.format}</p>` : ''}
+                ${data.date ? `<p><strong><span class="ar">تاريخ البيانات:</span><span class="en">Date:</span></strong> <span style="direction:ltr; display:inline-block;">${data.date}</span></p>` : ''}
                 <p>${data.details || ''}</p>
                 <p><small style="color:var(--primary-color); font-weight:bold;"><span class="ar">الناشر:</span><span class="en">Publisher:</span> ${finalPublisher}</small></p>
-                <a href="${data.link}" target="_blank" style="display:block; margin-top:10px; color:#fff; background:var(--primary-color); text-align:center; padding:8px; border-radius:8px; text-decoration:none;"><span class="ar">فتح الرابط</span><span class="en">Open Link</span></a>
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--glass-border);">
+                    <span style="font-weight: bold; font-size: 1.1em;">
+                        <span class="ar">التقييم: 4.9/5 ⭐</span><span class="en">Rating: 4.9/5 ⭐</span>
+                    </span>
+                    <button onclick="alert(isEn() ? 'Comments system is under development!' : 'نظام التعليقات قيد التطوير!')" style="background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border); padding: 5px 15px; border-radius: 15px; color: var(--text-color);">
+                        <span class="ar">💬 التعليقات</span><span class="en">💬 Comments</span>
+                    </button>
+                </div>
+
+                <a href="${data.link}" target="_blank" style="display:block; margin-top:20px; color:#fff; background:var(--primary-color); text-align:center; padding:12px; border-radius:12px; text-decoration:none; font-size: 1.2em; font-weight: bold;">
+                    <span class="ar">فتح الرابط</span><span class="en">Open Link</span>
+                </a>
             `;
 
             if (status === 'pending') {
@@ -222,8 +240,8 @@ function listenCollection(colName, publicId, adminId) {
                     adminCard.className = 'data-card glass-panel';
                     adminCard.innerHTML = cardHTML + `
                         <div class="admin-actions">
-                            <button onclick="approvePost('${colName}', '${id}')" style="background:#28a745; color: white;">موافقة ✅</button>
-                            <button onclick="rejectPost('${colName}', '${id}')" style="background:#dc3545; color: white;">رفض ❌</button>
+                            <button onclick="approvePost('${colName}', '${id}')" style="background:#28a745; color: white; width: 100%; margin-bottom: 5px;">موافقة ✅</button>
+                            <button onclick="rejectPost('${colName}', '${id}')" style="background:#dc3545; color: white; width: 100%;">رفض ❌</button>
                         </div>
                     `;
                     adminCont.appendChild(adminCard);
@@ -287,7 +305,7 @@ function renderNotifications() {
     }
 }
 
-// البحث
+// --- البحث ---
 window.filterSearch = (inputId, listId) => {
     const input = document.getElementById(inputId).value.toLowerCase();
     const container = document.getElementById(listId);
@@ -321,10 +339,10 @@ window.filterSearch = (inputId, listId) => {
     }
 };
 
-// الترجمة
+// --- الترجمة والتحكم في الواجهة ---
 window.toggleLanguage = () => {
     const body = document.body;
-    const btn = document.getElementById('lang-btn');
+    const btn = document.getElementById('lang-btn'); // إن وجد كزرار نصي
     const searchData = document.getElementById('search-data');
     const searchCourses = document.getElementById('search-courses');
     const searchPrograms = document.getElementById('search-programs');
@@ -333,7 +351,7 @@ window.toggleLanguage = () => {
     if(body.classList.contains('lang-ar')) {
         body.classList.replace('lang-ar', 'lang-en');
         body.dir = 'ltr';
-        btn.innerText = '🌐 AR';
+        if(btn) btn.innerText = '🌐 AR';
         if(searchData) searchData.placeholder = "Search for shapefile, geodatabase...";
         if(searchCourses) searchCourses.placeholder = "Search for courses...";
         if(searchPrograms) searchPrograms.placeholder = "Search for programs...";
@@ -341,7 +359,7 @@ window.toggleLanguage = () => {
     } else {
         body.classList.replace('lang-en', 'lang-ar');
         body.dir = 'rtl';
-        btn.innerText = '🌐 EN';
+        if(btn) btn.innerText = '🌐 EN';
         if(searchData) searchData.placeholder = "ابحث عن شيب فايل، جيوداتابيز...";
         if(searchCourses) searchCourses.placeholder = "ابحث عن الدورات والكورسات...";
         if(searchPrograms) searchPrograms.placeholder = "ابحث عن برامج...";
@@ -351,7 +369,7 @@ window.toggleLanguage = () => {
 
 window.toggleMobileMenu = () => { document.getElementById('nav-links').classList.toggle('show'); };
 window.showPage = (id, el) => { document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.querySelectorAll('.nav-links a').forEach(l=>l.classList.remove('active')); document.getElementById(id).classList.add('active'); el.classList.add('active'); if(window.innerWidth < 900) toggleMobileMenu(); };
-window.toggleTheme = () => { const body = document.body; const logo = document.getElementById('site-logo'); body.classList.toggle('dark-mode'); logo.src = body.classList.contains('dark-mode') ? 'AM (1).png' : 'AM.png'; };
+window.toggleTheme = () => { const body = document.body; const logo = document.getElementById('site-logo'); body.classList.toggle('dark-mode'); };
 
 window.handleStartBtn = () => {
     if (currentUser) {
