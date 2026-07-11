@@ -44,24 +44,14 @@
             </button>
             
             <!-- الجزء الخاص بالمستخدم (الاسم + الخروج) -->
-            <!-- نافذة التعليقات الحقيقية -->
-    <div id="comments-modal" class="modal">
-        <div class="modal-content glass-panel" style="max-width: 500px; padding: 25px;">
-            <span class="close" onclick="closeModal('comments-modal')">&times;</span>
-            <h2 style="color: var(--primary-color); margin-top: 0;"><span class="ar">التعليقات 💬</span><span class="en">Comments 💬</span></h2>
-            
-            <!-- مكان ظهور التعليقات -->
-            <div id="comments-list" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-left: 10px;">
-                <!-- سيتم إضافة التعليقات هنا برمجياً -->
+            <div id="user-info" style="display: none; align-items: center; gap: 15px;">
+                <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <span id="display-username" style="font-weight: 800; font-size: 1.1em; color: var(--text-color);">اسم المستخدم</span>
+                    <a href="#" onclick="logoutUser()" style="color: #dc3545; font-size: 0.85em; text-decoration: none; font-weight: bold;"><span class="ar">تسجيل خروج</span><span class="en">Logout</span></a>
+                </div>
+                <img src="Prof-USER.png" class="nav-icon-img" alt="User" style="width: 35px; filter: invert(1);">
             </div>
-            
-            <!-- مكان كتابة التعليق الجديد -->
-            <div style="display: flex; gap: 10px; margin-top: 20px; border-top: 1px solid var(--glass-border); padding-top: 20px;">
-                <input type="text" id="new-comment" placeholder="اكتب تعليقك هنا..." style="flex: 1; padding: 12px; font-size: 1em;">
-                <button class="start-btn-glass" onclick="addComment()" style="margin: 0; padding: 10px 20px; font-size: 1em;"><span class="ar">إرسال</span><span class="en">Send</span></button>
-            </div>
-        </div>
-    </div>
+
             <!-- زرار الدخول (لو مش مسجل) -->
             <button id="login-btn-nav" onclick="openModal('login-modal')" class="icon-btn" title="تسجيل الدخول">
                 <img src="Prof-USER.png" class="nav-icon-img" alt="User Login">
