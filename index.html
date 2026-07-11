@@ -39,15 +39,19 @@
                 <img src="NAT.png" class="nav-icon-img" alt="Notifications">
                 <span id="notif-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:#dc3545; color:white; border-radius:50%; width:16px; height:16px; font-size:12px; font-weight:bold; line-height:16px; text-align:center;">!</span>
             </button>
-            
-            <!-- أيقونة المستخدم (لتسجيل الدخول) -->
+         <!-- الجزء الخاص بالمستخدم (الاسم + الخروج) -->
+            <div id="user-info" style="display: none; align-items: center; gap: 15px;">
+                <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                    <span id="display-username" style="font-weight: 800; font-size: 1.1em; color: var(--text-color);">اسم المستخدم</span>
+                    <a href="#" onclick="logoutUser()" style="color: #dc3545; font-size: 0.85em; text-decoration: none; font-weight: bold;"><span class="ar">تسجيل خروج</span><span class="en">Logout</span></a>
+                </div>
+                <img src="Prof-USER.png" class="nav-icon-img" alt="User" style="width: 35px; filter: invert(1);">
+            </div>
+
+            <!-- زرار الدخول (لو مش مسجل) -->
             <button id="login-btn-nav" onclick="openModal('login-modal')" class="icon-btn" title="تسجيل الدخول">
                 <img src="Prof-USER.png" class="nav-icon-img" alt="User Login">
             </button>
-            
-            <!-- زرار الخروج -->
-            <button id="logout-btn-nav" onclick="logoutUser()" style="display: none; background-color: #dc3545; padding: 5px 15px; font-size:0.9em;"><span class="ar">خروج</span><span class="en">Logout</span></button>
-        </div>
     </nav>
 
     <!-- الصفحة الرئيسية (التصميم الجديد) -->
