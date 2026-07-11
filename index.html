@@ -17,7 +17,7 @@
             <img src="AM (1).png" alt="Logo" id="site-logo">
         </div>
         
-        <div class="menu-icon" onclick="toggleMobileMenu()">☰</div>
+        <!-- تم إزالة الـ 3 شرط من هنا -->
 
         <ul class="nav-links" id="nav-links">
             <li><a href="#" class="active" onclick="showPage('home', this)"><span class="ar">الرئيسية</span><span class="en">Home</span></a></li>
@@ -29,6 +29,9 @@
             <li id="admin-nav-link" style="display: none;"><a href="#" onclick="showPage('admin', this)" style="color: #dc3545;">⚙️ <span class="ar">لوحة التحكم</span><span class="en">Admin Panel</span></a></li>
         </ul>
         <div class="nav-actions">
+            <!-- زرار الدارك/لايت مود اللي كان طاير -->
+            <button onclick="toggleTheme()" id="theme-btn" class="icon-btn" title="تغيير المظهر" style="font-size: 1.5em; margin-left: 10px;">🌓</button>
+
             <!-- أيقونة اللغة -->
             <button onclick="toggleLanguage()" class="icon-btn" title="تغيير اللغة">
                 <img src="Lan.png" class="nav-icon-img" alt="Language">
@@ -39,7 +42,8 @@
                 <img src="NAT.png" class="nav-icon-img" alt="Notifications">
                 <span id="notif-badge" style="display:none; position:absolute; top:-5px; right:-5px; background:#dc3545; color:white; border-radius:50%; width:16px; height:16px; font-size:12px; font-weight:bold; line-height:16px; text-align:center;">!</span>
             </button>
-         <!-- الجزء الخاص بالمستخدم (الاسم + الخروج) -->
+            
+            <!-- الجزء الخاص بالمستخدم (الاسم + الخروج) -->
             <div id="user-info" style="display: none; align-items: center; gap: 15px;">
                 <div style="display: flex; flex-direction: column; align-items: flex-end;">
                     <span id="display-username" style="font-weight: 800; font-size: 1.1em; color: var(--text-color);">اسم المستخدم</span>
@@ -52,9 +56,10 @@
             <button id="login-btn-nav" onclick="openModal('login-modal')" class="icon-btn" title="تسجيل الدخول">
                 <img src="Prof-USER.png" class="nav-icon-img" alt="User Login">
             </button>
+        </div>
     </nav>
 
-    <!-- الصفحة الرئيسية (التصميم الجديد) -->
+    <!-- الصفحة الرئيسية -->
     <section id="home" class="page active">
         <div class="hero-content">
             <h1><span class="ar">بتدور علي شيب فايل لمنطقة الدراسة؟<br>مستني ايه! ابدأ هنا ومجاني 100%</span>
@@ -86,7 +91,7 @@
         </div>
     </section>
 
-    <!-- باقي الأقسام زي ما هي بس واخده ستايل الزجاج الجديد -->
+    <!-- أقسام الموقع -->
     <section id="data" class="page">
         <div class="search-container">
             <h2><span class="ar">محرك البحث</span><span class="en">Search Engine</span></h2>
@@ -150,17 +155,7 @@
         <div class="content-grid" id="admin-sites-list"></div>
     </section>
 
-    <!-- باقي النوافذ المنبثقة (الإشعارات، الدخول، الإضافة) زي ما هي بالظبط... -->
-    <!-- (ممكن تسيب الجزء اللي تحت ده من ملفك القديم زي ما هو لأن التعديل كان في الستايل بس) -->
-    
-    <div id="notif-modal" class="modal">
-        <div class="modal-content glass-panel">
-            <span class="close" onclick="closeModal('notif-modal')">&times;</span>
-            <h2><span class="ar">الإشعارات 🔔</span><span class="en">Notifications 🔔</span></h2>
-            <div id="notif-list" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;"></div>
-        </div>
-    </div>
-    <!-- نافذة الإشعارات -->
+    <!-- النوافذ المنبثقة -->
     <div id="notif-modal" class="modal">
         <div class="modal-content glass-panel">
             <span class="close" onclick="closeModal('notif-modal')">&times;</span>
@@ -174,7 +169,6 @@
         </div>
     </div>
 
-    <!-- نافذة الدخول والتسجيل -->
     <div id="login-modal" class="modal">
         <div class="modal-content glass-panel">
             <span class="close" onclick="closeModal('login-modal')">&times;</span>
@@ -201,7 +195,6 @@
         </div>
     </div>
 
-    <!-- نوافذ إضافة المحتوى (داتا، دورات، برامج، مواقع) -->
     <div id="create-data-modal" class="modal">
         <div class="modal-content glass-panel">
             <span class="close" onclick="closeModal('create-data-modal')">&times;</span>
