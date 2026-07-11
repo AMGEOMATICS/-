@@ -1,5 +1,7 @@
-/* استدعاء خط احترافي جداً (Tajawal) يدعم العربي والإنجليزي */
-@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+/* =========================================
+   1. استدعاء الخطوط والإعدادات الأساسية
+========================================= */
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
 
 :root {
     --bg-color: #f1f3f7;
@@ -24,7 +26,7 @@ body.dark-mode {
     --primary-color: #ff6b00;
     --modal-overlay: rgba(0, 0, 0, 0.6);
     
-    /* إعدادات الزجاج للـ Dark Mode (نفس تصميمك بالظبط) */
+    /* إعدادات الزجاج للـ Dark Mode */
     --glass-bg: rgba(20, 26, 38, 0.35);
     --glass-border: rgba(255, 255, 255, 0.1);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
@@ -35,16 +37,19 @@ body.dark-mode {
 
 body, html {
     margin: 0; padding: 0; width: 100%; overflow-x: hidden;
-    font-family: 'Tajawal', sans-serif; /* الخط الجديد */
+    font-family: 'Tajawal', sans-serif;
     background-color: transparent; 
     color: var(--text-color);
     transition: color 0.3s;
 }
 
+/* إخفاء اللغات */
 body.lang-ar .en, body.lang-ar .en * { display: none !important; }
 body.lang-en .ar, body.lang-en .ar * { display: none !important; }
 
-/* الخلفية */
+/* =========================================
+   2. الخلفيات (الأرض والشفافية)
+========================================= */
 .earth-bg {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
     background-image: url('earth.jpg'); 
@@ -57,7 +62,9 @@ body.lang-en .ar, body.lang-en .ar * { display: none !important; }
     background-color: var(--bg-color); opacity: 0.7; z-index: -1; pointer-events: none; transition: 0.3s;
 }
 
-/* شريط التنقل */
+/* =========================================
+   3. شريط التنقل (Navbar) اللي كان فيه مشكلة
+========================================= */
 nav {
     display: flex; justify-content: space-between; align-items: center;
     background: var(--nav-bg);
@@ -70,29 +77,52 @@ nav .logo img {
     width: auto; 
     height: 60px; 
     object-fit: contain;
-    transform: scale(2.2); /* الرقم ده بيكبر اللوجو، لو لقيته كبير أوي خليه 1.8 مثلاً */
+    transform: scale(2.2); 
     margin-right: 20px;
 }
+.nav-links { 
+    display: flex; 
+    gap: 30px; 
+    list-style: none; /* ده اللي شال النقط */
+    padding: 0; 
+    margin: 0;
+    align-items: center;
+}
+.nav-links li { margin: 0; }
+.nav-links a { 
+    color: var(--text-color); 
+    text-decoration: none; /* ده اللي شال الخط من تحت الكلام */
+    font-weight: 700; 
+    font-size: 1.15em; 
+    transition: 0.3s; 
+}
+.nav-links a:hover, .nav-links a.active { color: var(--primary-color); }
+.nav-actions { display: flex; gap: 15px; align-items: center; }
 
-/* أيقونات الناف بار */
 .nav-icon-img { width: 28px; height: auto; cursor: pointer; transition: 0.3s; }
 .nav-icon-img:hover { transform: scale(1.1); filter: drop-shadow(0 0 5px var(--primary-color)); }
-/* لو لايت مود والأيقونات بيضا، نعكس لونها لأسود عشان تبان */
-body:not(.dark-mode) .nav-icon-img { filter: invert(1); }
+body:not(.dark-mode) .nav-icon-img { filter: invert(1); } /* عكس لون الأيقونات في اللايت مود */
 
+/* =========================================
+   4. الأزرار العامة
+========================================= */
 button {
     cursor: pointer; border: none; padding: 10px 22px; border-radius: 30px;
     background-color: var(--primary-color); color: white; font-weight: bold;
     font-family: 'Tajawal', sans-serif; font-size: 1.1em; transition: 0.3s ease;
 }
 button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 107, 0, 0.4); }
-.icon-btn { background: transparent; border: none; padding: 0; display: flex; align-items: center; }
+.icon-btn { background: transparent; border: none; padding: 0; display: flex; align-items: center; box-shadow: none; }
+.icon-btn:hover { transform: none; box-shadow: none; }
 
+/* =========================================
+   5. الصفحات الرئيسية والأنيميشن
+========================================= */
 .page { display: none; padding: 40px 5%; min-height: 80vh; }
 .page.active { display: block; animation: fadeIn 0.4s ease-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-/* الواجهة الرئيسية الجديدة (تصميم الأزرار الأربعة) */
+/* الواجهة الرئيسية */
 .hero-content { text-align: center; margin-top: 8vh; }
 .hero-content h1 {
     font-size: 4.5rem; font-weight: 900; line-height: 1.25; margin-bottom: 20px;
@@ -107,10 +137,8 @@ button:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(255, 107
 }
 .start-btn-glass:hover { background: rgba(255, 107, 0, 0.2); transform: scale(1.05); }
 
-/* الأقسام الأربعة تحت زرار إبدأ */
-.hero-categories {
-    display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 30px;
-}
+/* الأقسام الأربعة الزجاجية */
+.hero-categories { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 30px; }
 .cat-box {
     width: 150px; padding: 25px 15px; text-align: center; cursor: pointer;
     border-radius: 20px; transition: 0.3s;
@@ -121,7 +149,9 @@ body:not(.dark-mode) .cat-box img { filter: invert(1); }
 .cat-box h3 { margin: 0; font-size: 1.4em; font-weight: 800; }
 .cat-box:hover { transform: translateY(-10px); border-color: var(--primary-color); }
 
-/* تأثير الزجاج القوي الموحد (البلور والشفافية) */
+/* =========================================
+   6. كلاس الزجاج الأساسي (Glassmorphism)
+========================================= */
 .glass-panel {
     background: var(--glass-bg);
     backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
@@ -130,7 +160,9 @@ body:not(.dark-mode) .cat-box img { filter: invert(1); }
     box-shadow: var(--glass-shadow); 
 }
 
-/* محركات البحث */
+/* =========================================
+   7. محركات البحث وكروت الداتا
+========================================= */
 .search-container { text-align: center; margin-top: 3vh; }
 .search-container h2 { font-size: 2.5em; margin-bottom: 25px; font-weight: 900; color: var(--primary-color); }
 .search-bar {
@@ -143,17 +175,16 @@ body:not(.dark-mode) .cat-box img { filter: invert(1); }
 .search-bar::placeholder { color: inherit; opacity: 0.7; }
 .search-bar:focus { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.15); }
 
-/* كروت الداتا (تصميم عصري) */
 .content-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 30px; margin-top: 45px; }
-.data-card {
-    padding: 30px; position: relative; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
+.data-card { padding: 30px; position: relative; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .data-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
 .data-card h3 { color: var(--text-color); margin-top: 0; font-size: 1.8em; font-weight: 800; text-align: center; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; }
 .data-card p { font-size: 1.1em; margin: 10px 0; }
-.delete-btn { position: absolute; top: 15px; left: 15px; background: #dc3545; padding: 6px 12px; font-size: 0.85em; border-radius: 8px; }
+.delete-btn { position: absolute; top: 15px; left: 15px; background: #dc3545; padding: 6px 12px; font-size: 0.85em; border-radius: 8px; border:none; }
 
-/* النوافذ المنبثقة */
+/* =========================================
+   8. النوافذ المنبثقة (Modals)
+========================================= */
 .modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--modal-overlay); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
 .modal-content { width: 90%; max-width: 460px; display: flex; flex-direction: column; gap: 18px; position: relative; padding: 40px; }
 .modal-content input, .modal-content select, .modal-content textarea {
@@ -161,3 +192,10 @@ body:not(.dark-mode) .cat-box img { filter: invert(1); }
     background: rgba(0, 0, 0, 0.1); color: var(--text-color); width: 100%; box-sizing: border-box; font-size: 1.1em; font-family: 'Tajawal', sans-serif; outline: none;
 }
 .close { position: absolute; top: 15px; right: 25px; font-size: 30px; cursor: pointer; color: var(--text-color); }
+
+/* الإشعارات ولوحة الأدمن */
+.notif-item { padding: 15px; border-radius: 10px; background: rgba(0, 0, 0, 0.1); border: 1px solid var(--glass-border); margin-bottom: 10px; }
+.notif-item.approved { border-right: 4px solid #28a745; }
+.notif-item.rejected { border-right: 4px solid #dc3545; }
+.admin-actions { display: flex; gap: 10px; margin-top: 15px; flex-direction: column; }
+.admin-actions button { flex: 1; padding: 8px; font-size: 1em; border-radius: 8px; border:none; cursor:pointer;}
