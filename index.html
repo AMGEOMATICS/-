@@ -156,9 +156,99 @@
             <div id="notif-list" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;"></div>
         </div>
     </div>
-    
-    <!-- عشان حجم الرسالة، ضيف هنا باقي أكواد الـ modals بتاعت تسجيل الدخول وإضافة الداتا من الكود القديم -->
-    
+    <!-- نافذة الإشعارات -->
+    <div id="notif-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close" onclick="closeModal('notif-modal')">&times;</span>
+            <h2><span class="ar">الإشعارات 🔔</span><span class="en">Notifications 🔔</span></h2>
+            <div id="notif-list" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                <p style="text-align:center;">
+                    <span class="ar">لا توجد إشعارات حالياً.</span>
+                    <span class="en">No notifications currently.</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة الدخول والتسجيل -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close" onclick="closeModal('login-modal')">&times;</span>
+            <div class="auth-tabs" style="display: flex; gap: 15px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; margin-bottom: 20px;">
+                <button class="auth-tab active" onclick="switchAuthTab('login')" style="background: transparent; color: var(--primary-color); border: none; font-size: 1.2em; font-family: 'Tajawal', sans-serif; font-weight: bold; padding: 0;"><span class="ar">دخول</span><span class="en">Login</span></button>
+                <button class="auth-tab" onclick="switchAuthTab('register')" style="background: transparent; color: var(--text-color); border: none; font-size: 1.2em; font-family: 'Tajawal', sans-serif; opacity: 0.6; padding: 0;"><span class="ar">حساب جديد</span><span class="en">Sign Up</span></button>
+            </div>
+            
+            <div id="login-form" class="auth-form" style="display: flex; flex-direction: column; gap: 15px;">
+                <input type="email" id="login-email" placeholder="الايميل | Email">
+                <input type="password" id="login-pass" placeholder="الباسورد | Password">
+                <a href="#" onclick="resetPassword()" style="color: var(--primary-color); font-size: 1em; text-decoration: none; text-align: right; margin-top: -5px;">
+                    <span class="ar">نسيت كلمة السر؟</span><span class="en">Forgot Password?</span>
+                </a>
+                <button class="start-btn-glass" onclick="loginUser()" style="margin-top: 15px; margin-bottom: 0; padding: 10px;"><span class="ar">دخول</span><span class="en">Login</span></button>
+            </div>
+            
+            <div id="register-form" class="auth-form" style="display: none; flex-direction: column; gap: 15px;">
+                <input type="text" id="reg-name" placeholder="اسم المستخدم | Username">
+                <input type="email" id="reg-email" placeholder="الايميل | Email">
+                <input type="password" id="reg-pass" placeholder="الباسورد | Password">
+                <button class="start-btn-glass" onclick="registerUser()" style="margin-top: 15px; margin-bottom: 0; padding: 10px;"><span class="ar">إنشاء حساب</span><span class="en">Sign Up</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- نوافذ إضافة المحتوى (داتا، دورات، برامج، مواقع) -->
+    <div id="create-data-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close" onclick="closeModal('create-data-modal')">&times;</span>
+            <h2><span class="ar">إضافة مشروع جديد</span><span class="en">Add New Project</span></h2>
+            <input type="text" id="data-title" placeholder="عنوان المشروع">
+            <select id="data-format" style="background: rgba(0,0,0,0.1); color: var(--text-color);">
+                <option value="Shapefile" style="color: black;">Shapefile</option>
+                <option value="Geodatabase" style="color: black;">Geodatabase</option>
+                <option value="GeoTIFF" style="color: black;">GeoTIFF</option>
+                <option value="KML/KMZ" style="color: black;">KML / KMZ</option>
+            </select>
+            <input type="date" id="data-date">
+            <textarea id="data-details" placeholder="تفاصيل المشروع (اختياري)"></textarea>
+            <input type="url" id="data-link" placeholder="لينك جوجل درايف للملف">
+            <button class="start-btn-glass" onclick="saveDataProject()" style="margin-bottom: 0; padding: 10px; margin-top: 10px;"><span class="ar">إرسال للمراجعة</span><span class="en">Submit for Review</span></button>
+        </div>
+    </div>
+
+    <div id="create-course-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close" onclick="closeModal('create-course-modal')">&times;</span>
+            <h2><span class="ar">إضافة دورة تعليمية</span><span class="en">Add Course</span></h2>
+            <input type="text" id="course-title" placeholder="عنوان الدورة">
+            <textarea id="course-details" placeholder="تفاصيل الدورة"></textarea>
+            <input type="url" id="course-link" placeholder="لينك اليوتيوب فقط">
+            <button class="start-btn-glass" onclick="saveCourse()" style="margin-bottom: 0; padding: 10px; margin-top: 10px;"><span class="ar">إرسال للمراجعة</span><span class="en">Submit for Review</span></button>
+        </div>
+    </div>
+
+    <div id="create-program-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close" onclick="closeModal('create-program-modal')">&times;</span>
+            <h2><span class="ar">إضافة برنامج</span><span class="en">Add Program</span></h2>
+            <input type="text" id="program-title" placeholder="اسم البرنامج (Title)">
+            <textarea id="program-details" placeholder="وصف البرنامج ومميزاته (Details)"></textarea>
+            <input type="url" id="program-link" placeholder="رابط موقع البرنامج أو التحميل (Link)">
+            <button class="start-btn-glass" onclick="saveProgram()" style="margin-bottom: 0; padding: 10px; margin-top: 10px;"><span class="ar">إرسال للمراجعة</span><span class="en">Submit for Review</span></button>
+        </div>
+    </div>
+
+    <div id="create-site-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <span class="close" onclick="closeModal('create-site-modal')">&times;</span>
+            <h2><span class="ar">إضافة موقع مهم</span><span class="en">Add Site</span></h2>
+            <input type="text" id="site-title" placeholder="اسم الموقع">
+            <textarea id="site-details" placeholder="التفاصيل"></textarea>
+            <input type="url" id="site-link" placeholder="رابط الموقع">
+            <button class="start-btn-glass" onclick="saveSite()" style="margin-bottom: 0; padding: 10px; margin-top: 10px;"><span class="ar">إرسال للمراجعة</span><span class="en">Submit for Review</span></button>
+        </div>
+    </div>
+
     <script type="module" src="app.js"></script>
 </body>
 </html>
